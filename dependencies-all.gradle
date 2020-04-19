@@ -27,12 +27,6 @@ ext.deps = [
                 'constraint_layout': "androidx.constraintlayout:constraintlayout:$versions.constraint_layout",
                 'swipe_refresh'    : "androidx.swiperefreshlayout:swiperefreshlayout:$versions.support",
         ],
-
-        'mvp'           : [
-                'core'     : "com.hannesdorfmann.mosby:mvp:$versions.mvp",
-                'viewState': "com.hannesdorfmann.mosby:viewstate:$versions.mvp_state",
-        ],
-
         'gms'           : [
                 'location': "com.google.android.gms:play-services-location:$versions.gms_location"
         ],
@@ -54,7 +48,6 @@ ext.deps = [
                 'tls'    : "com.squareup.okhttp3:okhttp-tls:$versions.okHttp",
                 'logging': "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
         ],
-        'moshi'         : "com.squareup.moshi:moshi-kotlin:$versions.moshi",
         'kotshi'        : [
                 'kotshi'  : "se.ansman.kotshi:api:$versions.kotshi",
                 'compiler': "se.ansman.kotshi:compiler:$versions.kotshi",
@@ -70,6 +63,11 @@ ext.deps = [
                 'extensions': "androidx.lifecycle:lifecycle-extensions:$versions.architecture",
                 'streams'   : "androidx.lifecycle:lifecycle-reactivestreams:$versions.architecture",
                 'testing'   : "androidx.arch.core:core-testing:$versions.architecture",
+        ],
+        'room'          : [
+                'runtime' : "androidx.room:room-runtime:$versions.room",
+                'compiler': "androidx.room:room-compiler:$versions.room",
+                'rx'      : "androidx.room:room-rxjava2:$versions.room",
         ],
         'mapbox'        : [
                 'sdk'       : "com.mapbox.mapboxsdk:mapbox-android-sdk:$versions.mapbox",
@@ -89,6 +87,11 @@ ext.deps = [
         //
         'shapeOfView'   : "com.github.florent37:shapeofview:$versions.shape_of_view",
         'recyclerHelper': "com.github.CymChad:BaseRecyclerViewAdapterHelper:$versions.recycler_helper",
+        'glide'         : [
+                'core'    : "com.github.bumptech.glide:glide:$versions.glide",
+                'compiler': "com.github.bumptech.glide:compiler:$versions.glide"
+        ],
+        'alerter' : "com.tapadoo.android:alerter:$versions.alerter",
 
         /**
          * TEST

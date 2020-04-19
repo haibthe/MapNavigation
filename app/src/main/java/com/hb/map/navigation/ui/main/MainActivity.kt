@@ -1,7 +1,8 @@
-package com.hb.map.navigation
+package com.hb.map.navigation.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.hb.map.navigation.R
 
 class MainActivity : AppCompatActivity() {
 

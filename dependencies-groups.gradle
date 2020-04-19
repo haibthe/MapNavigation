@@ -108,9 +108,18 @@ ext {
         kapt deps.ac.compiler
     }
 
+    room = Group {
+        implementation deps.room.runtime
+        kapt deps.room.compiler
+        implementation deps.room.rx
+    }
+
     ui = Group {
         implementation deps.shapeOfView
         implementation deps.recyclerHelper
+        implementation deps.glide.core
+        kapt deps.glide.compiler
+        implementation deps.alerter
     }
 
 
