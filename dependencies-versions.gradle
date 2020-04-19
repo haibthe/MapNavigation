@@ -29,6 +29,7 @@ ext.versions = [
 
         // Parse data
         'gson'                : '',
+        'auto_value'          : '1.7',
         // Network
         'okHttp'              : '4.4.0',
         'retrofit'            : '2.7.1',
@@ -43,7 +44,8 @@ ext.versions = [
         'mapbox_annotation'   : '0.8.0',
         'mapbox_marker'       : '0.4.0',
         'mapbox_sdk_turf'     : '5.0.0',
-        'mapbox_navi_ui'      : '0.42.6',
+        'mapbox_navigator'    : '7.0.0',
+        'mapbox_services'     : '4.9.0',
         // Cache
         'dual_cache'          : '3.1.1',
 

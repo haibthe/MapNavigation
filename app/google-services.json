@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:286012838861:android:78831d9c6fdcc267f4aa84",
+        "mobilesdk_app_id": "1:286012838861:android:922a3ddc7fe497abf4aa84",
         "android_client_info": {
-          "package_name": "com.hb.map.navigation"
+          "package_name": "com.hb.map.navigation.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "286012838861-gbjnbv80rupgbj5mcoa1g2e0kd0lrro4.apps.googleusercontent.com",
+          "client_id": "286012838861-ci4413vr3qajo07n66dcfa7nsneo2680.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hb.map.navigation",
+            "package_name": "com.hb.map.navigation.app",
             "certificate_hash": "04deb314c854dd3be581af584ff613e2580ee5e3"
           }
         },

@@ -18,6 +18,10 @@ ext.deps = [
         'timber'        : "com.jakewharton.timber:timber:$versions.timber",
         'multidex'      : "com.android.support:multidex:$versions.multidex",
         'gson'          : "com.google.code.gson:gson:$versions.gson",
+        'auto_value'    : [
+                'kapt': "com.google.auto.value:auto-value:$versions.auto_value",
+                'api' : "com.google.auto.value:auto-value-annotations:$versions.auto_value",
+        ],
         'support'       : [
                 'app'              : "androidx.appcompat:appcompat:$versions.support",
                 'core'             : "androidx.core:core-ktx:$versions.support",
@@ -75,7 +79,8 @@ ext.deps = [
                 'sdk_turf'  : "com.mapbox.mapboxsdk:mapbox-sdk-turf:$versions.mapbox_sdk_turf",
                 'annotation': "com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:$versions.mapbox_annotation",
                 'marker'    : "com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v9:$versions.mapbox_marker",
-                'navi_ui'   : "com.mapbox.mapboxsdk:mapbox-android-navigation-ui:$versions.mapbox_navi_ui",
+                'services'  : "com.mapbox.mapboxsdk:mapbox-sdk-services:$versions.mapbox_services",
+                'navigator' : "com.mapbox.navigator:mapbox-navigation-native:$versions.mapbox_navigator",
         ],
         'firebase'      : [
                 'core'       : "com.google.firebase:firebase-core:$versions.firebase_core",
@@ -91,7 +96,7 @@ ext.deps = [
                 'core'    : "com.github.bumptech.glide:glide:$versions.glide",
                 'compiler': "com.github.bumptech.glide:compiler:$versions.glide"
         ],
-        'alerter' : "com.tapadoo.android:alerter:$versions.alerter",
+        'alerter'       : "com.tapadoo.android:alerter:$versions.alerter",
 
         /**
          * TEST

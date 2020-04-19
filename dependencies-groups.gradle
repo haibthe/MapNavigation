@@ -40,6 +40,11 @@ ext {
         implementation deps.gson
     }
 
+    auto_value = Group {
+        kapt deps.auto_value.kapt
+        api deps.auto_value.api
+    }
+
 
     /**
      * Rx
@@ -74,12 +79,14 @@ ext {
     }
     // Mapbox
     mapbox = Group {
-        implementation deps.mapbox.sdk
-        implementation deps.mapbox.core
-        implementation deps.mapbox.annotation
-        implementation deps.mapbox.marker
-        implementation deps.mapbox.sdk_turf
-        implementation deps.mapbox.navi_ui
+        api deps.mapbox.sdk
+        api deps.mapbox.core
+        api deps.mapbox.annotation
+        api deps.mapbox.marker
+        api deps.mapbox.sdk_turf
+        api deps.mapbox.services
+//        implementation deps.mapbox.navi_ui
+        implementation deps.mapbox.navigator
     }
 
     // Firebase
@@ -95,11 +102,6 @@ ext {
         implementation deps.gms.location
     }
     // MVP Architecture
-    mvp = Group {
-        implementation deps.mvp.core
-        implementation deps.mvp.viewState
-    }
-
     architectureComponents = Group {
         implementation deps.ac.viewModel
         implementation deps.ac.liveData
