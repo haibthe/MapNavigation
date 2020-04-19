@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "286012838861",
+    "firebase_url": "https://mapnavigation-13f80.firebaseio.com",
+    "project_id": "mapnavigation-13f80",
+    "storage_bucket": "mapnavigation-13f80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286012838861:android:78831d9c6fdcc267f4aa84",
+        "android_client_info": {
+          "package_name": "com.hb.map.navigation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286012838861-gbjnbv80rupgbj5mcoa1g2e0kd0lrro4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hb.map.navigation",
+            "certificate_hash": "04deb314c854dd3be581af584ff613e2580ee5e3"
+          }
+        },
+        {
+          "client_id": "286012838861-qiene1388qauaf7f744tel41bjvvq4k6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5nSn59T6yEnEMy7ObIJV3VaeCFl--2qE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286012838861-qiene1388qauaf7f744tel41bjvvq4k6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
