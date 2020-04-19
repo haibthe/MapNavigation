@@ -1,0 +1,104 @@
+ext.deps = [
+        /**
+         * BUILD
+         */
+        'build'         : [
+                'gradle'        : "com.android.tools.build:gradle:$versions.gradle",
+                'kotlin'        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+                'gms'           : "com.google.gms:google-services:$versions.gms",
+                'fb_crashlytics': "com.google.firebase:firebase-crashlytics-gradle:2.0.0-beta04"
+        ],
+        /**
+         * MAIN
+         */
+        'libs'          : fileTree(dir: 'libs', include: ['*.jar']),
+        'kotlin'        : [
+                'lib': "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin",
+        ],
+        'timber'        : "com.jakewharton.timber:timber:$versions.timber",
+        'multidex'      : "com.android.support:multidex:$versions.multidex",
+        'gson'          : "com.google.code.gson:gson:$versions.gson",
+        'support'       : [
+                'app'              : "androidx.appcompat:appcompat:$versions.support",
+                'core'             : "androidx.core:core-ktx:$versions.support",
+                'cardView'         : "androidx.cardview:cardview:$versions.support",
+                'recyclerView'     : "androidx.recyclerview:recyclerview:$versions.support",
+                'design'           : "com.google.android.material:material:$versions.design",
+                'constraint_layout': "androidx.constraintlayout:constraintlayout:$versions.constraint_layout",
+                'swipe_refresh'    : "androidx.swiperefreshlayout:swiperefreshlayout:$versions.support",
+        ],
+
+        'mvp'           : [
+                'core'     : "com.hannesdorfmann.mosby:mvp:$versions.mvp",
+                'viewState': "com.hannesdorfmann.mosby:viewstate:$versions.mvp_state",
+        ],
+
+        'gms'           : [
+                'location': "com.google.android.gms:play-services-location:$versions.gms_location"
+        ],
+
+
+        'koin'          : [
+                'core'     : "org.koin:koin-android:$versions.koin",
+                'scope'    : "org.koin:koin-android-scope:$versions.koin",
+                'viewmodel': "org.koin:koin-android-viewmodel:$versions.koin",
+        ],
+
+        'retrofit'      : [
+                'retrofit': "com.squareup.retrofit2:retrofit:$versions.retrofit",
+                'gson'    : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+                'rx'      : "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+        ],
+        'okHttp'        : [
+                'okHttp' : "com.squareup.okhttp3:okhttp:$versions.okHttp",
+                'tls'    : "com.squareup.okhttp3:okhttp-tls:$versions.okHttp",
+                'logging': "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
+        ],
+        'moshi'         : "com.squareup.moshi:moshi-kotlin:$versions.moshi",
+        'kotshi'        : [
+                'kotshi'  : "se.ansman.kotshi:api:$versions.kotshi",
+                'compiler': "se.ansman.kotshi:compiler:$versions.kotshi",
+        ],
+        'rx'            : [
+                'android': "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid2",
+                'java'   : "io.reactivex.rxjava2:rxjava:$versions.rxJava2",
+        ],
+        'ac'            : [
+                'viewModel' : "androidx.lifecycle:lifecycle-viewmodel:$versions.architecture",
+                'liveData'  : "androidx.lifecycle:lifecycle-livedata:$versions.architecture",
+                'compiler'  : "androidx.lifecycle:lifecycle-compiler:$versions.architecture",
+                'extensions': "androidx.lifecycle:lifecycle-extensions:$versions.architecture",
+                'streams'   : "androidx.lifecycle:lifecycle-reactivestreams:$versions.architecture",
+                'testing'   : "androidx.arch.core:core-testing:$versions.architecture",
+        ],
+        'mapbox'        : [
+                'sdk'       : "com.mapbox.mapboxsdk:mapbox-android-sdk:$versions.mapbox",
+                'core'      : "com.mapbox.mapboxsdk:mapbox-android-core:$versions.mapbox_core",
+                'sdk_turf'  : "com.mapbox.mapboxsdk:mapbox-sdk-turf:$versions.mapbox_sdk_turf",
+                'annotation': "com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:$versions.mapbox_annotation",
+                'marker'    : "com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v9:$versions.mapbox_marker",
+                'navi_ui'   : "com.mapbox.mapboxsdk:mapbox-android-navigation-ui:$versions.mapbox_navi_ui",
+        ],
+        'firebase'      : [
+                'core'       : "com.google.firebase:firebase-core:$versions.firebase_core",
+                'analytics'  : "com.google.firebase:firebase-analytics:$versions.firebase_analytics",
+                'messaging'  : "com.google.firebase:firebase-messaging:$versions.firebase_messaging",
+                'crashlytics': "com.google.firebase:firebase-crashlytics:$versions.firebase_crashlytics",
+        ],
+
+        //
+        'shapeOfView'   : "com.github.florent37:shapeofview:$versions.shape_of_view",
+        'recyclerHelper': "com.github.CymChad:BaseRecyclerViewAdapterHelper:$versions.recycler_helper",
+
+        /**
+         * TEST
+         */
+        'jUnit'         : "junit:junit:$versions.jUnit",
+        'truth'         : "com.google.truth:truth:$versions.truth",
+        'mockito'       : [
+                'core'  : "org.mockito:mockito-core:$versions.mockito",
+                'inline': "org.mockito:mockito-inline:$versions.mockito",
+        ],
+        'robolectric'   : "org.robolectric:robolectric:$versions.robolectric",
+
+]

@@ -1,0 +1,134 @@
+def Group(Closure closure) {
+    closure.delegate = dependencies
+    return closure
+}
+
+ext {
+    /**
+     * Library
+     */
+    libLocal = Group {
+        api deps.libs
+    }
+
+    /**
+     * Kotlin
+     */
+    kotlin = Group {
+        implementation deps.kotlin.lib
+    }
+
+
+    debugging = Group {
+        implementation deps.timber
+    }
+
+
+    /**
+     * Network
+     */
+    networking = Group {
+        implementation deps.retrofit.retrofit
+        implementation deps.retrofit.gson
+        implementation deps.retrofit.rx
+
+        implementation deps.okHttp.okHttp
+        implementation deps.okHttp.tls
+        implementation deps.okHttp.logging
+
+
+        implementation deps.gson
+    }
+
+
+    /**
+     * Rx
+     */
+    rx = Group {
+        implementation deps.rx.android
+        implementation deps.rx.java
+    }
+
+
+    /**
+     * Support
+     */
+    support = Group {
+        implementation deps.support.app
+        implementation deps.support.cardView
+        implementation deps.support.recyclerView
+        implementation deps.support.design
+        implementation deps.support.constraint_layout
+        implementation deps.support.swipe_refresh
+    }
+
+    //  Multidex
+    multidex = Group {
+        implementation deps.multidex
+    }
+    //  Koin
+    koin = Group {
+        implementation deps.koin.core
+        implementation deps.koin.scope
+        implementation deps.koin.viewmodel
+    }
+    // Mapbox
+    mapbox = Group {
+        implementation deps.mapbox.sdk
+        implementation deps.mapbox.core
+        implementation deps.mapbox.annotation
+        implementation deps.mapbox.marker
+        implementation deps.mapbox.sdk_turf
+        implementation deps.mapbox.navi_ui
+    }
+
+    // Firebase
+    firebase = Group {
+        api deps.firebase.analytics
+        api deps.firebase.core
+        api deps.firebase.messaging
+        api deps.firebase.crashlytics
+    }
+
+    // GMS Location
+    gms = Group {
+        implementation deps.gms.location
+    }
+    // MVP Architecture
+    mvp = Group {
+        implementation deps.mvp.core
+        implementation deps.mvp.viewState
+    }
+
+    architectureComponents = Group {
+        implementation deps.ac.viewModel
+        implementation deps.ac.liveData
+        implementation deps.ac.extensions
+        implementation deps.ac.streams
+        kapt deps.ac.compiler
+    }
+
+    ui = Group {
+        implementation deps.shapeOfView
+        implementation deps.recyclerHelper
+    }
+
+
+    /**
+     * TESTING
+     */
+    testing = Group {
+        testImplementation(deps.jUnit) { exclude group: 'org.hamcrest' }
+        testImplementation deps.truth
+
+        testImplementation deps.mockito.core
+        testImplementation deps.mockito.inline
+
+        testImplementation(deps.robolectric) { exclude group: 'org.assertj' }
+
+        testImplementation deps.ac.testing
+
+//        testImplementation deps.firebase.store
+//        testImplementation deps.rx.java
+    }
+}
