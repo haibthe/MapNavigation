@@ -12,34 +12,34 @@ import java.util.Date;
 import java.util.TimeZone;
 
 class TimestampAdapter extends TypeAdapter<Date> {
-  private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-  private static final String UTC = "UTC";
+    private static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+    private static final String UTC = "UTC";
 
-  @Override
-  public void write(JsonWriter out, Date value) throws IOException {
-    if (value == null) {
-      out.nullValue();
-    } else {
-      DATE_FORMAT.setTimeZone(TimeZone.getTimeZone(UTC));
-      String date = DATE_FORMAT.format(value);
-      out.value(date);
-    }
-  }
-
-  @Override
-  public Date read(JsonReader reader) throws IOException {
-    if (reader.peek() == JsonToken.NULL) {
-      reader.nextNull();
-      return null;
+    @Override
+    public void write(JsonWriter out, Date value) throws IOException {
+        if (value == null) {
+            out.nullValue();
+        } else {
+            DATE_FORMAT.setTimeZone(TimeZone.getTimeZone(UTC));
+            String date = DATE_FORMAT.format(value);
+            out.value(date);
+        }
     }
 
-    String dateAsString = reader.nextString();
-    try {
-      return DATE_FORMAT.parse(dateAsString);
-    } catch (ParseException exception) {
-      exception.printStackTrace();
+    @Override
+    public Date read(JsonReader reader) throws IOException {
+        if (reader.peek() == JsonToken.NULL) {
+            reader.nextNull();
+            return null;
+        }
+
+        String dateAsString = reader.nextString();
+        try {
+            return DATE_FORMAT.parse(dateAsString);
+        } catch (ParseException exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
-    return null;
-  }
 }

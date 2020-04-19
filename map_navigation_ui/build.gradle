@@ -7,9 +7,17 @@ dependencies {
     kotlin()
     support()
     networking()
+    debugging()
 
 
     api project(':map_navigation')
+    mapbox()
+
+    architectureComponents()
+
+    auto_value()
+
+    implementation "com.squareup.picasso:picasso:2.71828"
 }
 
 

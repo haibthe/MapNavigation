@@ -22,7 +22,7 @@ import java.util.List;
  * information.
  * <p>
  * The latest route progress object can be obtained through either the {@link ProgressChangeListener}
- * or the {@link com.mapbox.services.android.navigation.v5.milestone.MilestoneEventListener} callbacks.
+ * or the {@link com.hb.map.navigation.v1.milestone.MilestoneEventListener} callbacks.
  * Note that the route progress object's immutable.
  * </p>
  *
@@ -31,261 +31,261 @@ import java.util.List;
 @AutoValue
 public abstract class RouteProgress {
 
-  /**
-   * Get the route the navigation session is currently using. When a reroute occurs and a new
-   * directions route gets obtained, with the next location update this directions route should
-   * reflect the new route. All direction route get passed in through
-   * {@link com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation#startNavigation(DirectionsRoute)}.
-   *
-   * @return a {@link DirectionsRoute} currently being used for the navigation session
-   * @since 0.1.0
-   */
-  public abstract DirectionsRoute directionsRoute();
-
-  /**
-   * Index representing the current leg the user is on. If the directions route currently in use
-   * contains more then two waypoints, the route is likely to have multiple legs representing the
-   * distance between the two points.
-   *
-   * @return an integer representing the current leg the user is on
-   * @since 0.1.0
-   */
-  public abstract int legIndex();
-
-  /**
-   * Provides the current {@link RouteLeg} the user is on.
-   *
-   * @return a {@link RouteLeg} the user is currently on
-   * @since 0.1.0
-   */
-  @NonNull
-  public RouteLeg currentLeg() {
-    return directionsRoute().legs().get(legIndex());
-  }
-
-  /**
-   * Total distance traveled in meters along route.
-   *
-   * @return a double value representing the total distance the user has traveled along the route,
-   * using unit meters
-   * @since 0.1.0
-   */
-  public double distanceTraveled() {
-    double distanceTraveled = directionsRoute().distance() - distanceRemaining();
-    if (distanceTraveled < 0) {
-      distanceTraveled = 0;
+    public static Builder builder() {
+        return new AutoValue_RouteProgress.Builder();
     }
-    return distanceTraveled;
-  }
 
-  /**
-   * Provides the duration remaining in seconds till the user reaches the end of the route.
-   *
-   * @return {@code long} value representing the duration remaining till end of route, in unit
-   * seconds
-   * @since 0.1.0
-   */
-  public double durationRemaining() {
-    return (1 - fractionTraveled()) * directionsRoute().duration();
-  }
+    /**
+     * Get the route the navigation session is currently using. When a reroute occurs and a new
+     * directions route gets obtained, with the next location update this directions route should
+     * reflect the new route. All direction route get passed in through
+     * {@link com.hb.map.navigation.v1.navigation.MapboxNavigation#startNavigation(DirectionsRoute)}.
+     *
+     * @return a {@link DirectionsRoute} currently being used for the navigation session
+     * @since 0.1.0
+     */
+    public abstract DirectionsRoute directionsRoute();
 
-  /**
-   * Get the fraction traveled along the current route, this is a float value between 0 and 1 and
-   * isn't guaranteed to reach 1 before the user reaches the end of the route.
-   *
-   * @return a float value between 0 and 1 representing the fraction the user has traveled along the
-   * route
-   * @since 0.1.0
-   */
-  public float fractionTraveled() {
-    float fractionRemaining = 1;
+    /**
+     * Index representing the current leg the user is on. If the directions route currently in use
+     * contains more then two waypoints, the route is likely to have multiple legs representing the
+     * distance between the two points.
+     *
+     * @return an integer representing the current leg the user is on
+     * @since 0.1.0
+     */
+    public abstract int legIndex();
 
-    if (directionsRoute().distance() > 0) {
-      fractionRemaining = (float) (distanceTraveled() / directionsRoute().distance());
+    /**
+     * Provides the current {@link RouteLeg} the user is on.
+     *
+     * @return a {@link RouteLeg} the user is currently on
+     * @since 0.1.0
+     */
+    @NonNull
+    public RouteLeg currentLeg() {
+        return directionsRoute().legs().get(legIndex());
     }
-    return fractionRemaining;
-  }
 
-  /**
-   * Provides the distance remaining in meters till the user reaches the end of the route.
-   *
-   * @return {@code long} value representing the distance remaining till end of route, in unit meters
-   * @since 0.1.0
-   */
-  public abstract double distanceRemaining();
+    /**
+     * Total distance traveled in meters along route.
+     *
+     * @return a double value representing the total distance the user has traveled along the route,
+     * using unit meters
+     * @since 0.1.0
+     */
+    public double distanceTraveled() {
+        double distanceTraveled = directionsRoute().distance() - distanceRemaining();
+        if (distanceTraveled < 0) {
+            distanceTraveled = 0;
+        }
+        return distanceTraveled;
+    }
 
-  /**
-   * Number of waypoints remaining on the current route.
-   *
-   * @return integer value representing the number of way points remaining along the route
-   * @since 0.5.0
-   */
-  public int remainingWaypoints() {
-    return directionsRoute().legs().size() - legIndex();
-  }
+    /**
+     * Provides the duration remaining in seconds till the user reaches the end of the route.
+     *
+     * @return {@code long} value representing the duration remaining till end of route, in unit
+     * seconds
+     * @since 0.1.0
+     */
+    public double durationRemaining() {
+        return (1 - fractionTraveled()) * directionsRoute().duration();
+    }
 
-  /**
-   * Gives a {@link RouteLegProgress} object with information about the particular leg the user is
-   * currently on.
-   *
-   * @return a {@link RouteLegProgress} object
-   * @since 0.1.0
-   */
-  public abstract RouteLegProgress currentLegProgress();
+    /**
+     * Get the fraction traveled along the current route, this is a float value between 0 and 1 and
+     * isn't guaranteed to reach 1 before the user reaches the end of the route.
+     *
+     * @return a float value between 0 and 1 representing the fraction the user has traveled along the
+     * route
+     * @since 0.1.0
+     */
+    public float fractionTraveled() {
+        float fractionRemaining = 1;
 
-  /**
-   * Provides a list of points that represent the current step
-   * step geometry.
-   *
-   * @return list of points representing the current step
-   * @since 0.12.0
-   */
-  public abstract List<Point> currentStepPoints();
+        if (directionsRoute().distance() > 0) {
+            fractionRemaining = (float) (distanceTraveled() / directionsRoute().distance());
+        }
+        return fractionRemaining;
+    }
 
-  /**
-   * Provides a list of points that represent the upcoming step
-   * step geometry.
-   *
-   * @return list of points representing the upcoming step
-   * @since 0.12.0
-   */
-  @Nullable
-  public abstract List<Point> upcomingStepPoints();
+    /**
+     * Provides the distance remaining in meters till the user reaches the end of the route.
+     *
+     * @return {@code long} value representing the distance remaining till end of route, in unit meters
+     * @since 0.1.0
+     */
+    public abstract double distanceRemaining();
 
-  /**
-   * Returns whether or not the location updates are
-   * considered in a tunnel along the route.
-   *
-   * @return true if in a tunnel, false otherwise
-   * @since 0.19.0
-   */
-  public abstract boolean inTunnel();
+    /**
+     * Number of waypoints remaining on the current route.
+     *
+     * @return integer value representing the number of way points remaining along the route
+     * @since 0.5.0
+     */
+    public int remainingWaypoints() {
+        return directionsRoute().legs().size() - legIndex();
+    }
 
-  /**
-   * Current voice instruction.
-   *
-   * @return current voice instruction
-   * @since 0.20.0
-   */
-  @Nullable
-  public abstract VoiceInstruction voiceInstruction();
+    /**
+     * Gives a {@link RouteLegProgress} object with information about the particular leg the user is
+     * currently on.
+     *
+     * @return a {@link RouteLegProgress} object
+     * @since 0.1.0
+     */
+    public abstract RouteLegProgress currentLegProgress();
 
-  /**
-   * Current banner instruction.
-   *
-   * @return current banner instruction
-   * @since 0.25.0
-   */
-  @Nullable
-  public abstract BannerInstruction bannerInstruction();
+    /**
+     * Provides a list of points that represent the current step
+     * step geometry.
+     *
+     * @return list of points representing the current step
+     * @since 0.12.0
+     */
+    public abstract List<Point> currentStepPoints();
 
-  /**
-   * Returns the current state of progress along the route.  Provides route and location tracking
-   * information.
-   *
-   * @return the current state of progress along the route.
-   */
-  @Nullable
-  public abstract RouteProgressState currentState();
+    /**
+     * Provides a list of points that represent the upcoming step
+     * step geometry.
+     *
+     * @return list of points representing the upcoming step
+     * @since 0.12.0
+     */
+    @Nullable
+    public abstract List<Point> upcomingStepPoints();
 
-  /**
-   * Returns the current {@link DirectionsRoute} geometry with a buffer
-   * that encompasses visible tile surface are while navigating.
-   * <p>
-   * This {@link Geometry} is ideal for offline downloads of map or routing tile
-   * data.
-   *
-   * @return current route geometry with buffer
-   */
-  @Nullable
-  public abstract Geometry routeGeometryWithBuffer();
+    /**
+     * Returns whether or not the location updates are
+     * considered in a tunnel along the route.
+     *
+     * @return true if in a tunnel, false otherwise
+     * @since 0.19.0
+     */
+    public abstract boolean inTunnel();
 
-  public abstract RouteProgress.Builder toBuilder();
+    /**
+     * Current voice instruction.
+     *
+     * @return current voice instruction
+     * @since 0.20.0
+     */
+    @Nullable
+    public abstract VoiceInstruction voiceInstruction();
 
-  abstract LegStep currentStep();
+    /**
+     * Current banner instruction.
+     *
+     * @return current banner instruction
+     * @since 0.25.0
+     */
+    @Nullable
+    public abstract BannerInstruction bannerInstruction();
 
-  abstract int stepIndex();
+    /**
+     * Returns the current state of progress along the route.  Provides route and location tracking
+     * information.
+     *
+     * @return the current state of progress along the route.
+     */
+    @Nullable
+    public abstract RouteProgressState currentState();
 
-  abstract double legDistanceRemaining();
+    /**
+     * Returns the current {@link DirectionsRoute} geometry with a buffer
+     * that encompasses visible tile surface are while navigating.
+     * <p>
+     * This {@link Geometry} is ideal for offline downloads of map or routing tile
+     * data.
+     *
+     * @return current route geometry with buffer
+     */
+    @Nullable
+    public abstract Geometry routeGeometryWithBuffer();
 
-  abstract double stepDistanceRemaining();
-
-  abstract double legDurationRemaining();
-
-  @AutoValue.Builder
-  public abstract static class Builder {
-
-    public abstract Builder directionsRoute(DirectionsRoute directionsRoute);
-
-    abstract DirectionsRoute directionsRoute();
-
-    public abstract Builder legIndex(int legIndex);
-
-    abstract int legIndex();
-
-    public abstract Builder stepIndex(int stepIndex);
-
-    abstract int stepIndex();
-
-    public abstract Builder legDistanceRemaining(double legDistanceRemaining);
-
-    abstract double legDistanceRemaining();
-
-    public abstract Builder legDurationRemaining(double durationRemaining);
-
-    abstract double legDurationRemaining();
-
-    public abstract Builder stepDistanceRemaining(double stepDistanceRemaining);
-
-    abstract double stepDistanceRemaining();
-
-    public abstract Builder currentStep(LegStep currentStep);
+    public abstract RouteProgress.Builder toBuilder();
 
     abstract LegStep currentStep();
 
-    public abstract Builder currentStepPoints(List<Point> currentStepPoints);
+    abstract int stepIndex();
 
-    abstract List<Point> currentStepPoints();
+    abstract double legDistanceRemaining();
 
-    public abstract Builder upcomingStepPoints(@Nullable List<Point> upcomingStepPoints);
+    abstract double stepDistanceRemaining();
 
-    abstract List<Point> upcomingStepPoints();
+    abstract double legDurationRemaining();
 
-    public abstract Builder distanceRemaining(double distanceRemaining);
+    @AutoValue.Builder
+    public abstract static class Builder {
 
-    abstract Builder currentLegProgress(RouteLegProgress routeLegProgress);
+        public abstract Builder directionsRoute(DirectionsRoute directionsRoute);
 
-    public abstract Builder inTunnel(boolean inTunnel);
+        abstract DirectionsRoute directionsRoute();
 
-    public abstract Builder voiceInstruction(@Nullable VoiceInstruction voiceInstruction);
+        public abstract Builder legIndex(int legIndex);
 
-    public abstract Builder bannerInstruction(@Nullable BannerInstruction bannerInstruction);
+        abstract int legIndex();
 
-    public abstract Builder currentState(@Nullable RouteProgressState currentState);
+        public abstract Builder stepIndex(int stepIndex);
 
-    public abstract Builder routeGeometryWithBuffer(@Nullable Geometry routeGeometryWithBuffer);
+        abstract int stepIndex();
 
-    abstract RouteProgress autoBuild(); // not public
+        public abstract Builder legDistanceRemaining(double legDistanceRemaining);
 
-    public RouteProgress build() {
-      RouteLeg currentLeg = directionsRoute().legs().get(legIndex());
-      RouteLegProgress legProgress = RouteLegProgress.builder()
-        .routeLeg(currentLeg)
-        .currentStep(currentStep())
-        .stepIndex(stepIndex())
-        .distanceRemaining(legDistanceRemaining())
-        .durationRemaining(legDurationRemaining())
-        .stepDistanceRemaining(stepDistanceRemaining())
-        .currentStepPoints(currentStepPoints())
-        .upcomingStepPoints(upcomingStepPoints())
-        .build();
-      currentLegProgress(legProgress);
+        abstract double legDistanceRemaining();
 
-      return autoBuild();
+        public abstract Builder legDurationRemaining(double durationRemaining);
+
+        abstract double legDurationRemaining();
+
+        public abstract Builder stepDistanceRemaining(double stepDistanceRemaining);
+
+        abstract double stepDistanceRemaining();
+
+        public abstract Builder currentStep(LegStep currentStep);
+
+        abstract LegStep currentStep();
+
+        public abstract Builder currentStepPoints(List<Point> currentStepPoints);
+
+        abstract List<Point> currentStepPoints();
+
+        public abstract Builder upcomingStepPoints(@Nullable List<Point> upcomingStepPoints);
+
+        abstract List<Point> upcomingStepPoints();
+
+        public abstract Builder distanceRemaining(double distanceRemaining);
+
+        abstract Builder currentLegProgress(RouteLegProgress routeLegProgress);
+
+        public abstract Builder inTunnel(boolean inTunnel);
+
+        public abstract Builder voiceInstruction(@Nullable VoiceInstruction voiceInstruction);
+
+        public abstract Builder bannerInstruction(@Nullable BannerInstruction bannerInstruction);
+
+        public abstract Builder currentState(@Nullable RouteProgressState currentState);
+
+        public abstract Builder routeGeometryWithBuffer(@Nullable Geometry routeGeometryWithBuffer);
+
+        abstract RouteProgress autoBuild(); // not public
+
+        public RouteProgress build() {
+            RouteLeg currentLeg = directionsRoute().legs().get(legIndex());
+            RouteLegProgress legProgress = RouteLegProgress.builder()
+                    .routeLeg(currentLeg)
+                    .currentStep(currentStep())
+                    .stepIndex(stepIndex())
+                    .distanceRemaining(legDistanceRemaining())
+                    .durationRemaining(legDurationRemaining())
+                    .stepDistanceRemaining(stepDistanceRemaining())
+                    .currentStepPoints(currentStepPoints())
+                    .upcomingStepPoints(upcomingStepPoints())
+                    .build();
+            currentLegProgress(legProgress);
+
+            return autoBuild();
+        }
     }
-  }
-
-  public static Builder builder() {
-    return new AutoValue_RouteProgress.Builder();
-  }
 }

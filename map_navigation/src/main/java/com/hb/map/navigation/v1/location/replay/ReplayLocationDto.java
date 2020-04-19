@@ -7,84 +7,84 @@ import java.util.Date;
 
 class ReplayLocationDto {
 
-  @SerializedName("lng")
-  private double longitude;
-  @SerializedName("horizontalAccuracy")
-  private float horizontalAccuracyMeters;
-  @SerializedName("course")
-  private double bearing;
-  @SerializedName("verticalAccuracy")
-  private float verticalAccuracyMeters;
-  private double speed;
-  @SerializedName("lat")
-  private double latitude;
-  @SerializedName("altitude")
-  private double altitude;
-  @SerializedName("timestamp")
-  @JsonAdapter(TimestampAdapter.class)
-  private Date date;
+    @SerializedName("lng")
+    private double longitude;
+    @SerializedName("horizontalAccuracy")
+    private float horizontalAccuracyMeters;
+    @SerializedName("course")
+    private double bearing;
+    @SerializedName("verticalAccuracy")
+    private float verticalAccuracyMeters;
+    private double speed;
+    @SerializedName("lat")
+    private double latitude;
+    @SerializedName("altitude")
+    private double altitude;
+    @SerializedName("timestamp")
+    @JsonAdapter(TimestampAdapter.class)
+    private Date date;
 
-  double getLongitude() {
-    return longitude;
-  }
+    double getLongitude() {
+        return longitude;
+    }
 
-  void setLongitude(double longitude) {
-    this.longitude = longitude;
-  }
+    void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
-  float getHorizontalAccuracyMeters() {
-    return horizontalAccuracyMeters;
-  }
+    float getHorizontalAccuracyMeters() {
+        return horizontalAccuracyMeters;
+    }
 
-  void setHorizontalAccuracyMeters(float horizontalAccuracyMeters) {
-    this.horizontalAccuracyMeters = horizontalAccuracyMeters;
-  }
+    void setHorizontalAccuracyMeters(float horizontalAccuracyMeters) {
+        this.horizontalAccuracyMeters = horizontalAccuracyMeters;
+    }
 
-  double getBearing() {
-    return bearing;
-  }
+    double getBearing() {
+        return bearing;
+    }
 
-  void setBearing(double bearing) {
-    this.bearing = bearing;
-  }
+    void setBearing(double bearing) {
+        this.bearing = bearing;
+    }
 
-  float getVerticalAccuracyMeters() {
-    return verticalAccuracyMeters;
-  }
+    float getVerticalAccuracyMeters() {
+        return verticalAccuracyMeters;
+    }
 
-  void setVerticalAccuracyMeters(float verticalAccuracyMeters) {
-    this.verticalAccuracyMeters = verticalAccuracyMeters;
-  }
+    void setVerticalAccuracyMeters(float verticalAccuracyMeters) {
+        this.verticalAccuracyMeters = verticalAccuracyMeters;
+    }
 
-  double getSpeed() {
-    return speed;
-  }
+    double getSpeed() {
+        return speed;
+    }
 
-  void setSpeed(double speed) {
-    this.speed = speed;
-  }
+    void setSpeed(double speed) {
+        this.speed = speed;
+    }
 
-  double getLatitude() {
-    return latitude;
-  }
+    double getLatitude() {
+        return latitude;
+    }
 
-  void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
+    void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
-  double getAltitude() {
-    return altitude;
-  }
+    double getAltitude() {
+        return altitude;
+    }
 
-  void setAltitude(double altitude) {
-    this.altitude = altitude;
-  }
+    void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
 
-  Date getDate() {
-    return date;
-  }
+    Date getDate() {
+        return date;
+    }
 
-  void setDate(Date date) {
-    this.date = date;
-  }
+    void setDate(Date date) {
+        this.date = date;
+    }
 }

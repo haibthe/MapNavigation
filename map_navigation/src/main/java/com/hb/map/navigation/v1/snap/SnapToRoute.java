@@ -11,27 +11,27 @@ import com.mapbox.navigator.NavigationStatus;
 
 public class SnapToRoute extends Snap {
 
-  @Override
-  public Location getSnappedLocation(Location location, RouteProgress routeProgress) {
-    // No impl
-    return location;
-  }
-
-  public Location getSnappedLocationWith(NavigationStatus status, Location rawLocation) {
-    return buildSnappedLocation(status, rawLocation);
-  }
-
-  @NonNull
-  private Location buildSnappedLocation(NavigationStatus status, Location rawLocation) {
-    Location snappedLocation = new Location(rawLocation);
-    FixLocation fixLocation = status.getLocation();
-    Point coordinate = fixLocation.getCoordinate();
-    snappedLocation.setLatitude(coordinate.latitude());
-    snappedLocation.setLongitude(coordinate.longitude());
-    if (fixLocation.getBearing() != null) {
-      snappedLocation.setBearing(fixLocation.getBearing());
+    @Override
+    public Location getSnappedLocation(Location location, RouteProgress routeProgress) {
+        // No impl
+        return location;
     }
-    snappedLocation.setTime(fixLocation.getTime().getTime());
-    return snappedLocation;
-  }
+
+    public Location getSnappedLocationWith(NavigationStatus status, Location rawLocation) {
+        return buildSnappedLocation(status, rawLocation);
+    }
+
+    @NonNull
+    private Location buildSnappedLocation(NavigationStatus status, Location rawLocation) {
+        Location snappedLocation = new Location(rawLocation);
+        FixLocation fixLocation = status.getLocation();
+        Point coordinate = fixLocation.getCoordinate();
+        snappedLocation.setLatitude(coordinate.latitude());
+        snappedLocation.setLongitude(coordinate.longitude());
+        if (fixLocation.getBearing() != null) {
+            snappedLocation.setBearing(fixLocation.getBearing());
+        }
+        snappedLocation.setTime(fixLocation.getTime().getTime());
+        return snappedLocation;
+    }
 }

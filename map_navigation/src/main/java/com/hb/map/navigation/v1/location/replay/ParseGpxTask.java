@@ -17,53 +17,53 @@ import javax.xml.parsers.ParserConfigurationException;
 
 class ParseGpxTask extends AsyncTask<InputStream, Void, List<Location>> {
 
-  private static final int FIRST_INPUT_STREAM = 0;
+    private static final int FIRST_INPUT_STREAM = 0;
 
-  private Listener listener;
-  private GpxParser parser;
+    private Listener listener;
+    private GpxParser parser;
 
-  ParseGpxTask(GpxParser parser, Listener listener) {
-    this.parser = parser;
-    this.listener = listener;
-  }
-
-  @Override
-  protected List<Location> doInBackground(InputStream... inputStreams) {
-    InputStream inputStream = inputStreams[FIRST_INPUT_STREAM];
-    try {
-      return parseGpxStream(inputStream);
-    } catch (IOException exception) {
-      listener.onParseError(exception);
-      return null;
+    ParseGpxTask(GpxParser parser, Listener listener) {
+        this.parser = parser;
+        this.listener = listener;
     }
-  }
 
-  @Override
-  protected void onPostExecute(List<Location> locationList) {
-    if (locationList != null && !locationList.isEmpty()) {
-      listener.onParseComplete(locationList);
-    } else {
-      listener.onParseError(new RuntimeException("An error occurred parsing the GPX Xml."));
+    @Override
+    protected List<Location> doInBackground(InputStream... inputStreams) {
+        InputStream inputStream = inputStreams[FIRST_INPUT_STREAM];
+        try {
+            return parseGpxStream(inputStream);
+        } catch (IOException exception) {
+            listener.onParseError(exception);
+            return null;
+        }
     }
-  }
 
-  @Nullable
-  private List<Location> parseGpxStream(InputStream inputStream) throws IOException {
-    try {
-      return parser.parseGpx(inputStream);
-    } catch (ParserConfigurationException | ParseException | SAXException | IOException exception) {
-      exception.printStackTrace();
-      listener.onParseError(exception);
-      return null;
-    } finally {
-      inputStream.close();
+    @Override
+    protected void onPostExecute(List<Location> locationList) {
+        if (locationList != null && !locationList.isEmpty()) {
+            listener.onParseComplete(locationList);
+        } else {
+            listener.onParseError(new RuntimeException("An error occurred parsing the GPX Xml."));
+        }
     }
-  }
 
-  public interface Listener {
+    @Nullable
+    private List<Location> parseGpxStream(InputStream inputStream) throws IOException {
+        try {
+            return parser.parseGpx(inputStream);
+        } catch (ParserConfigurationException | ParseException | SAXException | IOException exception) {
+            exception.printStackTrace();
+            listener.onParseError(exception);
+            return null;
+        } finally {
+            inputStream.close();
+        }
+    }
 
-    void onParseComplete(@NonNull List<Location> gpxLocationList);
+    public interface Listener {
 
-    void onParseError(Exception exception);
-  }
+        void onParseComplete(@NonNull List<Location> gpxLocationList);
+
+        void onParseError(Exception exception);
+    }
 }

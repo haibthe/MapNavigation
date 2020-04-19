@@ -9,10 +9,10 @@ import android.location.Location;
  */
 public interface RawLocationListener {
 
-  /**
-   * Invoked as soon as a new {@link Location} has been received.
-   *
-   * @param rawLocation un-snapped update
-   */
-  void onLocationUpdate(Location rawLocation);
+    /**
+     * Invoked as soon as a new {@link Location} has been received.
+     *
+     * @param rawLocation un-snapped update
+     */
+    void onLocationUpdate(Location rawLocation);
 }

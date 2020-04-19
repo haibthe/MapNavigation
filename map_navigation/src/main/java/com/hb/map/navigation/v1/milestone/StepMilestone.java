@@ -13,62 +13,62 @@ import com.hb.map.navigation.v1.routeprogress.RouteProgress;
  */
 public class StepMilestone extends Milestone {
 
-  private Builder builder;
-  private boolean called;
+    private Builder builder;
+    private boolean called;
 
-  private StepMilestone(Builder builder) {
-    super(builder);
-    this.builder = builder;
-  }
-
-  @Override
-  public boolean isOccurring(RouteProgress previousRouteProgress, RouteProgress routeProgress) {
-
-    // Determine if the step index has changed and set called accordingly. This prevents multiple calls to
-    // onMilestoneEvent per Step.
-    if (previousRouteProgress.currentLegProgress().stepIndex()
-      != routeProgress.currentLegProgress().stepIndex()) {
-      called = false;
-    }
-    // If milestone's been called already on current step, no need to check triggers.
-    if (called) {
-      return false;
-    }
-    if (builder.getTrigger().isOccurring(
-      TriggerProperty.getSparseArray(previousRouteProgress, routeProgress))) {
-      called = true;
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Build a new {@link StepMilestone}
-   *
-   * @since 0.4.0
-   */
-  public static final class Builder extends Milestone.Builder {
-
-    private Trigger.Statement trigger;
-
-    public Builder() {
-      super();
+    private StepMilestone(Builder builder) {
+        super(builder);
+        this.builder = builder;
     }
 
     @Override
-    public Builder setTrigger(Trigger.Statement trigger) {
-      this.trigger = trigger;
-      return this;
+    public boolean isOccurring(RouteProgress previousRouteProgress, RouteProgress routeProgress) {
+
+        // Determine if the step index has changed and set called accordingly. This prevents multiple calls to
+        // onMilestoneEvent per Step.
+        if (previousRouteProgress.currentLegProgress().stepIndex()
+                != routeProgress.currentLegProgress().stepIndex()) {
+            called = false;
+        }
+        // If milestone's been called already on current step, no need to check triggers.
+        if (called) {
+            return false;
+        }
+        if (builder.getTrigger().isOccurring(
+                TriggerProperty.getSparseArray(previousRouteProgress, routeProgress))) {
+            called = true;
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    Trigger.Statement getTrigger() {
-      return trigger;
-    }
+    /**
+     * Build a new {@link StepMilestone}
+     *
+     * @since 0.4.0
+     */
+    public static final class Builder extends Milestone.Builder {
 
-    @Override
-    public StepMilestone build() throws NavigationException {
-      return new StepMilestone(this);
+        private Trigger.Statement trigger;
+
+        public Builder() {
+            super();
+        }
+
+        @Override
+        Trigger.Statement getTrigger() {
+            return trigger;
+        }
+
+        @Override
+        public Builder setTrigger(Trigger.Statement trigger) {
+            this.trigger = trigger;
+            return this;
+        }
+
+        @Override
+        public StepMilestone build() throws NavigationException {
+            return new StepMilestone(this);
+        }
     }
-  }
 }

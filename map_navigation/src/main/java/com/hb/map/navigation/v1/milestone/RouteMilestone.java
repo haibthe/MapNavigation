@@ -12,52 +12,52 @@ import com.hb.map.navigation.v1.routeprogress.RouteProgress;
  */
 public class RouteMilestone extends Milestone {
 
-  private Builder builder;
-  private boolean called;
+    private Builder builder;
+    private boolean called;
 
-  private RouteMilestone(Builder builder) {
-    super(builder);
-    this.builder = builder;
-  }
-
-  @Override
-  public boolean isOccurring(RouteProgress previousRouteProgress, RouteProgress routeProgress) {
-
-    if (builder.getTrigger().isOccurring(
-      TriggerProperty.getSparseArray(previousRouteProgress, routeProgress)) && !called) {
-      called = true;
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Build a new {@link RouteMilestone}
-   *
-   * @since 0.4.0
-   */
-  public static final class Builder extends Milestone.Builder {
-
-    private Trigger.Statement trigger;
-
-    public Builder() {
-      super();
+    private RouteMilestone(Builder builder) {
+        super(builder);
+        this.builder = builder;
     }
 
     @Override
-    public Builder setTrigger(Trigger.Statement trigger) {
-      this.trigger = trigger;
-      return this;
+    public boolean isOccurring(RouteProgress previousRouteProgress, RouteProgress routeProgress) {
+
+        if (builder.getTrigger().isOccurring(
+                TriggerProperty.getSparseArray(previousRouteProgress, routeProgress)) && !called) {
+            called = true;
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    Trigger.Statement getTrigger() {
-      return trigger;
-    }
+    /**
+     * Build a new {@link RouteMilestone}
+     *
+     * @since 0.4.0
+     */
+    public static final class Builder extends Milestone.Builder {
 
-    @Override
-    public RouteMilestone build() {
-      return new RouteMilestone(this);
+        private Trigger.Statement trigger;
+
+        public Builder() {
+            super();
+        }
+
+        @Override
+        Trigger.Statement getTrigger() {
+            return trigger;
+        }
+
+        @Override
+        public Builder setTrigger(Trigger.Statement trigger) {
+            this.trigger = trigger;
+            return this;
+        }
+
+        @Override
+        public RouteMilestone build() {
+            return new RouteMilestone(this);
+        }
     }
-  }
 }

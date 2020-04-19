@@ -1,0 +1,21 @@
+package com.hb.map.navigation.v1.offroute;
+
+import android.location.Location;
+
+import com.hb.map.navigation.v1.navigation.MapboxNavigationOptions;
+import com.hb.map.navigation.v1.routeprogress.RouteProgress;
+import com.mapbox.navigator.NavigationStatus;
+import com.mapbox.navigator.RouteState;
+
+public class OffRouteDetector extends OffRoute {
+
+    @Override
+    public boolean isUserOffRoute(Location location, RouteProgress routeProgress, MapboxNavigationOptions options) {
+        // No impl
+        return false;
+    }
+
+    public boolean isUserOffRouteWith(NavigationStatus status) {
+        return status.getRouteState() == RouteState.OFFROUTE;
+    }
+}

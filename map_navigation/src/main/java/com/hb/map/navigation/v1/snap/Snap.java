@@ -7,5 +7,5 @@ import com.hb.map.navigation.v1.routeprogress.RouteProgress;
 
 public abstract class Snap {
 
-  public abstract Location getSnappedLocation(Location location, RouteProgress routeProgress);
+    public abstract Location getSnappedLocation(Location location, RouteProgress routeProgress);
 }

@@ -5,5 +5,5 @@ import android.location.Location;
 
 interface ReplayLocationListener {
 
-  void onLocationReplay(Location location);
+    void onLocationReplay(Location location);
 }

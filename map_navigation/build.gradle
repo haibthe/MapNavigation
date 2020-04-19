@@ -1,6 +1,22 @@
 apply plugin: 'com.android.library'
 apply from: '../config-android.gradle'
 
+android {
+    defaultConfig {
+        buildConfigField('String',
+                "MAPBOX_NAVIGATION_SDK_IDENTIFIER", String.format("\"%s\"", "mapbox-navigation-android")
+        )
+        buildConfigField('String',
+                "MAPBOX_NAVIGATION_VERSION_NAME", String.format("\"%s\"", project.VERSION_NAME)
+        )
+        buildConfigField "String",
+                "MAPBOX_NAVIGATION_EVENTS_USER_AGENT", String.format("\"mapbox-navigation-android/%s\"",
+                project.VERSION_NAME
+        )
+        consumerProguardFiles 'proguard-consumer.pro'
+    }
+}
+
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
@@ -12,6 +28,8 @@ dependencies {
     mapbox()
 
     auto_value()
+
+    testing()
 
 }
 

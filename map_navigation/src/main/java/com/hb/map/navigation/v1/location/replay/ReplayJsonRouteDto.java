@@ -6,23 +6,23 @@ import java.util.List;
 
 class ReplayJsonRouteDto {
 
-  private List<ReplayLocationDto> locations;
-  @SerializedName("route")
-  private String routeRequest;
+    private List<ReplayLocationDto> locations;
+    @SerializedName("route")
+    private String routeRequest;
 
-  List<ReplayLocationDto> getLocations() {
-    return locations;
-  }
+    List<ReplayLocationDto> getLocations() {
+        return locations;
+    }
 
-  void setLocations(List<ReplayLocationDto> locations) {
-    this.locations = locations;
-  }
+    void setLocations(List<ReplayLocationDto> locations) {
+        this.locations = locations;
+    }
 
-  String getRouteRequest() {
-    return routeRequest;
-  }
+    String getRouteRequest() {
+        return routeRequest;
+    }
 
-  void setRouteRequest(String routeRequest) {
-    this.routeRequest = routeRequest;
-  }
+    void setRouteRequest(String routeRequest) {
+        this.routeRequest = routeRequest;
+    }
 }
