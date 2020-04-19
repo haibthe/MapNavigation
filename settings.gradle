@@ -1,2 +1,4 @@
 rootProject.name='MapNavigation'
 include ':app'
+include ':map_navigation'
+include ':map_navigation_ui'

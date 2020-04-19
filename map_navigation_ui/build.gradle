@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+apply from: '../config-android.gradle'
+
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    kotlin()
+    support()
+    networking()
+
+
+    api project(':map_navigation')
+}
+
+
