@@ -29,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.hb.map.navigation.ui.test.NavigationLauncherActivity" />
+        <activity android:name="com.hb.map.navigation.ui.test.NavigationSettingsActivity" />
     </application>
 
 </manifest>

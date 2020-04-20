@@ -13,13 +13,33 @@ def getVersionCodeTimestamp() {
 }
 
 android {
+
+    def getGitHash = { ->
+        try {
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-parse', '--short', 'HEAD'
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } catch (Exception exception) {
+            return ""
+        }
+    }
+
+
     defaultConfig {
         applicationId "com.hb.map.navigation.app"
         versionCode getVersionCodeTimestamp()
         versionName "1.0.1"
+
+        buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
     }
 
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -72,6 +92,16 @@ android {
 ////            manifestPlaceholders = [icon_app: "@drawable/ic_logo_vcloud_cam"]
 //        }
 //    }
+
+    dexOptions {
+        maxProcessCount 8
+        javaMaxHeapSize "2g"
+        preDexLibraries true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 configurations.all {

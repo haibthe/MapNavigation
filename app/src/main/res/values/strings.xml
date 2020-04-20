@@ -1,3 +1,76 @@
 <resources>
-    <string name="app_name">MapNavigation</string>
-</resources>
+    <string name="app_name">SDK Điều hướng của Mapbox</string>
+
+    <string name="title_mock_navigation">Giả bộ Điều hướng</string>
+    <string name="description_mock_navigation">Giả bộ phiên điều hướng dùng máy định vị giả.</string>
+
+    <string name="title_off_route_detection">Nhận ra Lạc đường</string>
+    <string name="description_off_route_detection">Sử dụng lớp RouteUtils để xác định người dùng bị lạc đường.</string>
+
+    <string name="title_reroute">Tìm Đường đi Mới</string>
+    <string name="description_reroute">Thử chức năng tìm đường đi mới trong SDK Điều hướng</string>
+
+    <string name="title_navigation_route_ui">Tuyến đường trên Bản đồ Điều hướng</string>
+    <string name="description_navigation_route_ui">Vẽ tuyến đường trên bản đồ</string>
+
+    <string name="title_navigation_launcher">Trình khởi động Điều hướng</string>
+    <string name="description_navigation_launcher">Trải nghiệm giao diện người dùng có thể xen vào</string>
+
+    <string name="title_end_navigation">Kết thúc Điều hướng</string>
+    <string name="description_end_navigation">Cho biết cách kết thúc điều hướng dùng NavigationView</string>
+
+    <string name="title_dual_navigation_map">Đôi Bản đồ Điều hướng</string>
+    <string name="description_dual_navigation_map">Chỉ cách thêm NavigationView và MapView vào cùng bố cục</string>
+
+    <string name="title_waypoint_navigation">Điều hướng giữa các Tọa độ điểm</string>
+    <string name="description_waypoint_navigation">Điều hướng giữa các tọa độ điểm</string>
+
+    <string name="title_embedded_navigation">Điều hướng được Nhúng</string>
+    <string name="description_embedded_navigation">Điều hướng trong khung nhìn chứa các khung nhìn khác</string>
+
+    <string name="title_fragment_navigation">NavigationView thực hiện bằng Fragment</string>
+    <string name="description_fragment_navigation">NavigationView thực hiện bằng Fragment</string>
+
+    <string name="title_component_navigation">MapboxNavigation có bộ phận giao diện</string>
+    <string name="description_component_navigation">MapboxNavigation có bộ phận giao diện</string>
+
+    <string name="settings">Thiết lập</string>
+    <string name="simulate_route">Mô phỏng Tuyến đường</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="unit_type">Hệ Đo lường</string>
+    <string name="route_profile">Chế độ</string>
+
+    <string name="unit_type_key" translatable="false">unit_type</string>
+    <string name="simulate_route_key" translatable="false">simulate_route</string>
+    <string name="language_key" translatable="false">language</string>
+    <string name="route_profile_key" translatable="false">route_profile</string>
+    <string name="default_route_profile">driving-traffic</string>
+    <string name="view_examples_key" translatable="false">view_examples</string>
+    <string name="git_hash_key" translatable="false">git_hash</string>
+    <string name="offline_version_key" translatable="false">offline_preference_key</string>
+    <string name="offline_region_download" translatable="false">offline_region_download</string>
+    <string name="offline_enabled" translatable="false">offline_region_download</string>
+    <string name="default_locale" translatable="false">default_for_device</string>
+    <string name="default_unit_type" translatable="false">default_for_device</string>
+    <string name="current_night_mode" translatable="false">current_night_mode</string>
+    <string name="was_in_tunnel" translatable="false">was_in_tunnel</string>
+    <string name="was_navigation_stopped" translatable="false">was_navigation_stopped</string>
+
+    <string name="error_route_not_available">Tuyến đường hiện tại không có sẵn</string>
+    <string name="error_select_longer_route">Vui lòng chọn một tuyến đường dài hơn</string>
+    <string name="error_valid_route_not_found">Không tìm thấy tuyến đi được.</string>
+    <string name="explanation_long_press_waypoint">Chạm lâu vào bản đồ để thả ghim tọa độ điểm</string>
+
+    <string name="blue" translatable="false">#4264fb</string>
+
+    <string name="hint_where_to">Where to?</string>
+    <string name="autocompleteBehavior" translatable="false">com.mapbox.services.android.navigation.testapp.example.ui.autocomplete.AutocompleteBottomSheetBehavior</string>
+    <string name="download_complete">Download is complete!</string>
+    <string name="offline_routing">Offline routing</string>
+    <string name="offline_enabled_title">Offline routing enabled</string>
+    <string name="offline_category_title">Offline</string>
+    <string name="offline_region_download_title">Download offline region</string>
+    <string name="offline_version_title">Choose offline version</string>
+    <string name="general_category_title">General</string>
+
+    </resources>
