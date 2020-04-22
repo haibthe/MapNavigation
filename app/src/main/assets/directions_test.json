@@ -1,0 +1,290 @@
+{
+  "routeIndex": "0",
+  "distance": 2548.0,
+  "duration": 590.0,
+  "geometry": "sdqqSy|}njEaQoLuHaJtQci@jBaFlOya@rg@nh@pItIjNfMnIjIbI~HdJhIb@^fS~PjX~U|TpT`GjFzTfUfDpCbGfGlb@l_@`R~Q~D~D`WhV`CzBxDxDdC`DfQ`RzGdHt_@t`@`ElEbYxZbh@lg@hTyVhWgYjPyQ`DqD|EoFtRoTd_@_b@vL_NfMkMf[pYjHhHte@`d@tw@bw@zLjM|_@z_@zb@ta@r\\z[jYjXcAvB{Qta@yNt\\oCjG",
+  "weight": 743.8,
+  "weight_name": "routability",
+  "legs": [{
+    "distance": 2548.0,
+    "duration": 590.0,
+    "summary": "Võ Thị Sáu, Ngô Thời Nhiệm",
+    "steps": [{
+      "distance": 65.8,
+      "duration": 85.6,
+      "geometry": "sdqqSy|}njEaQoLuHaJ",
+      "name": "",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.692061, 10.789978],
+        "bearing_before": 0.0,
+        "bearing_after": 36.0,
+        "instruction": "Head northeast",
+        "type": "depart"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 65.8,
+        "primary": {
+          "text": "Thạch Thị Thanh",
+          "components": [{
+            "text": "Thạch Thị Thanh",
+            "type": "text"
+          }],
+          "type": "turn",
+          "modifier": "right"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 88.9,
+      "intersections": [{
+        "location": [106.692061, 10.789978],
+        "bearings": [0],
+        "entry": [true],
+        "out": 0
+      }]
+    }, {
+      "distance": 162.1,
+      "duration": 83.7,
+      "geometry": "k`rqSku~njEtQci@jBaFlOya@",
+      "name": "Thạch Thị Thanh",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.692454, 10.790422],
+        "bearing_before": 47.0,
+        "bearing_after": 113.0,
+        "instruction": "Turn right onto Thạch Thị Thanh",
+        "type": "end of road",
+        "modifier": "right"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 162.1,
+        "primary": {
+          "text": "Võ Thị Sáu",
+          "components": [{
+            "text": "Võ Thị Sáu",
+            "type": "text"
+          }],
+          "type": "turn",
+          "modifier": "right"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 110.2,
+      "intersections": [{
+        "location": [106.692454, 10.790422],
+        "bearings": [0],
+        "entry": [true],
+        "out": 0
+      }]
+    }, {
+      "distance": 1095.0,
+      "duration": 189.29999999999995,
+      "geometry": "{ypqSkiaojErg@nh@pItIjNfMnIjIbI~HdJhIb@^fS~PjX~U|TpT`GjFzTfUfDpCbGfGlb@l_@`R~Q~D~D`WhV`CzBxDxDdC`DfQ`RzGdHt_@t`@`ElEbYxZbh@lg@",
+      "name": "Võ Thị Sáu",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.693798, 10.789806],
+        "bearing_before": 115.0,
+        "bearing_after": 225.0,
+        "instruction": "Turn right onto Võ Thị Sáu",
+        "type": "end of road",
+        "modifier": "right"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 1095.0,
+        "primary": {
+          "text": "Trần Quốc Thảo",
+          "components": [{
+            "text": "Trần Quốc Thảo",
+            "type": "text"
+          }],
+          "type": "turn",
+          "modifier": "left"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 295.70000000000005,
+      "intersections": [{
+        "location": [106.693798, 10.789806],
+        "bearings": [0],
+        "entry": [false],
+        "in": 2,
+        "out": 1
+      }]
+    }, {
+      "distance": 402.6,
+      "duration": 72.5,
+      "geometry": "w_cqScvsnjEhTyVhWgYjPyQ`DqD|EoFtRoTd_@_b@vL_NfMkM",
+      "name": "Trần Quốc Thảo",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.686834, 10.782732],
+        "bearing_before": 223.0,
+        "bearing_after": 132.0,
+        "instruction": "Turn left onto Trần Quốc Thảo",
+        "type": "turn",
+        "modifier": "left"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 402.6,
+        "primary": {
+          "text": "Ngô Thời Nhiệm",
+          "components": [{
+            "text": "Ngô Thời Nhiệm",
+            "type": "text"
+          }],
+          "type": "turn",
+          "modifier": "right"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 83.9,
+      "intersections": [{
+        "location": [106.686834, 10.782732],
+        "bearings": [0],
+        "entry": [false],
+        "in": 0,
+        "out": 1
+      }]
+    }, {
+      "distance": 670.0,
+      "duration": 136.0,
+      "geometry": "{d~pS}}xnjEf[pYjHhHte@`d@tw@bw@zLjM|_@z_@zb@ta@r\\z[jYjX",
+      "name": "Ngô Thời Nhiệm",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.689519, 10.780254],
+        "bearing_before": 135.0,
+        "bearing_after": 222.0,
+        "instruction": "Turn right onto Ngô Thời Nhiệm",
+        "type": "turn",
+        "modifier": "right"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 670.0,
+        "primary": {
+          "text": "Đường Cách Mạng Tháng Tám",
+          "components": [{
+            "text": "Đường Cách Mạng Tháng Tám",
+            "type": "text"
+          }],
+          "type": "turn",
+          "modifier": "right"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 142.20000000000002,
+      "intersections": [{
+        "location": [106.689519, 10.780254],
+        "bearings": [0],
+        "entry": [true],
+        "in": 3,
+        "out": 2
+      }]
+    }, {
+      "distance": 152.6,
+      "duration": 22.9,
+      "geometry": "euupSutpnjEcAvB{Qta@yNt\\oCjG",
+      "name": "Đường Cách Mạng Tháng Tám",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.685275, 10.775907],
+        "bearing_before": 222.0,
+        "bearing_after": 298.0,
+        "instruction": "Turn right onto Đường Cách Mạng Tháng Tám",
+        "type": "turn",
+        "modifier": "right"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [{
+        "distanceAlongGeometry": 152.6,
+        "primary": {
+          "text": "You will arrive",
+          "components": [{
+            "text": "You will arrive",
+            "type": "text"
+          }],
+          "type": "arrive",
+          "modifier": "right"
+        }
+      }, {
+        "distanceAlongGeometry": 33.3,
+        "primary": {
+          "text": "You have arrived",
+          "components": [{
+            "text": "You have arrived",
+            "type": "text"
+          }],
+          "type": "arrive",
+          "modifier": "right"
+        }
+      }],
+      "driving_side": "right",
+      "weight": 22.9,
+      "intersections": [{
+        "location": [106.685275, 10.775907],
+        "bearings": [0],
+        "entry": [true],
+        "in": 0,
+        "out": 3
+      }]
+    }, {
+      "distance": 0.0,
+      "duration": 0.0,
+      "geometry": "o~vpSehnnjE",
+      "name": "Đường Cách Mạng Tháng Tám",
+      "mode": "driving",
+      "maneuver": {
+        "location": [106.684051, 10.776568],
+        "bearing_before": 299.0,
+        "bearing_after": 0.0,
+        "instruction": "You have arrived at your destination, on the right",
+        "type": "arrive",
+        "modifier": "right"
+      },
+      "voiceInstructions": [],
+      "bannerInstructions": [],
+      "driving_side": "right",
+      "weight": 0.0,
+      "intersections": [{
+        "location": [106.684051, 10.776568],
+        "bearings": [0],
+        "entry": [true],
+        "in": 0
+      }]
+    }],
+    "annotation": {
+      "distance": [39.87765892396514, 25.907832607850388, 80.80228616578103, 13.729790938825204, 67.52312801813409, 102.42155633876901, 26.50300063860852, 37.003180988752284, 26.040846093958237, 25.105387553815902, 26.858819549376477, 2.65789144160501, 47.84205770286694, 60.46412802815324, 54.268464520269674, 19.289751204005178, 55.0313737382737, 12.284514355957773, 20.422591237138622, 84.81077985567279, 47.47742336635373, 14.967798404434495, 59.11571498870738, 9.907509929214292, 14.500067595522392, 11.569817284188858, 46.53353454509963, 22.526118782367703, 82.77798948176606, 15.590181834921049, 67.27277476150893, 101.75355104418252, 56.31625964214356, 63.0710446166122, 45.14121666811235, 13.25638849487436, 18.00942124401556, 51.383681337313625, 83.81566194947291, 35.866772143476666, 35.70230042778111, 68.43898908034596, 23.310966279675856, 94.54298411671088, 140.7287268060333, 35.231543380300785, 82.09149941215013, 88.05379479782097, 72.99172101409158, 64.58385393849854, 7.568419684765211, 69.32361211280556, 59.03865703767582, 16.68848164682009],
+      "congestion": ["unknown", "unknown", "unknown", "unknown", "unknown", "low", "low", "heavy", "heavy", "heavy", "heavy", "heavy", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "low", "moderate", "moderate", "low", "unknown", "low", "low", "heavy", "moderate", "moderate", "moderate", "unknown", "low", "low", "low", "low"]
+    }
+  }],
+  "routeOptions": {
+    "baseUrl": "https://api.mapbox.com",
+    "user": "mapbox",
+    "profile": "driving-traffic",
+    "coordinates": [
+      [106.6920881, 10.789958],
+      [106.6841719, 10.7767865]
+    ],
+    "alternatives": true,
+    "language": "en",
+    "bearings": ";",
+    "continue_straight": true,
+    "roundabout_exits": true,
+    "geometries": "polyline6",
+    "overview": "full",
+    "steps": true,
+    "annotations": "congestion,distance",
+    "voice_instructions": true,
+    "banner_instructions": true,
+    "voice_units": "metric",
+    "access_token": "pk.eyJ1Ijoibm9uMjM1IiwiYSI6ImNrOGFnZHYzcDAxdDMzb3BpNmthdW1lMHAifQ.BmGzpCy_5Pl2XxIS7XCYbA",
+    "uuid": "ck953h0pk00an5qqnkl9zcca5"
+  },
+  "voiceLocale": "en-US"
+}

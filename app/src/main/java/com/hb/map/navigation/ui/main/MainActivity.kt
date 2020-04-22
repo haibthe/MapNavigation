@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.hb.map.navigation.app.databinding.ActivityMainBinding
 import com.hb.map.navigation.ui.test.NavigationLauncherActivity
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,4 +19,5 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 }

@@ -92,6 +92,8 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        currentLocation = Point.fromLngLat(106.68986, 10.805176);
+
         mBinding = ActivityNavigationLauncherBinding.inflate(getLayoutInflater());
 
         setContentView(mBinding.getRoot());
@@ -389,6 +391,7 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
                 .build();
         optionsBuilder.initialMapCameraPosition(initialPosition);
         optionsBuilder.directionsRoute(route);
+        optionsBuilder.shouldSimulateRoute(true);
         String offlinePath = obtainOfflinePath();
         if (!TextUtils.isEmpty(offlinePath)) {
             optionsBuilder.offlineRoutingTilesPath(offlinePath);
