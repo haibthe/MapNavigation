@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.hb.map.navigation.v1.location.RawLocationListener;
 import com.hb.map.navigation.v1.milestone.Milestone;
 import com.hb.map.navigation.v1.milestone.MilestoneEventListener;
-import com.hb.map.navigation.v1.navigation.metrics.NavigationMetricListener;
 import com.hb.map.navigation.v1.offroute.OffRouteListener;
 import com.hb.map.navigation.v1.route.FasterRouteListener;
 import com.hb.map.navigation.v1.routeprogress.ProgressChangeListener;
@@ -28,7 +27,6 @@ class NavigationEventDispatcher {
     private CopyOnWriteArrayList<OffRouteListener> offRouteListeners;
     private CopyOnWriteArrayList<FasterRouteListener> fasterRouteListeners;
     private CopyOnWriteArrayList<RawLocationListener> rawLocationListeners;
-    private NavigationMetricListener metricEventListener;
     private RouteUtils routeUtils;
 
     NavigationEventDispatcher() {
@@ -161,7 +159,7 @@ class NavigationEventDispatcher {
     }
 
     void onProgressChange(Location location, RouteProgress routeProgress) {
-        sendMetricProgressUpdate(routeProgress);
+//        sendMetricProgressUpdate(routeProgress);
         for (ProgressChangeListener progressChangeListener : progressChangeListeners) {
             progressChangeListener.onProgressChange(location, routeProgress);
         }
@@ -171,9 +169,9 @@ class NavigationEventDispatcher {
         for (OffRouteListener offRouteListener : offRouteListeners) {
             offRouteListener.userOffRoute(location);
         }
-        if (metricEventListener != null) {
-            metricEventListener.onOffRouteEvent(location);
-        }
+//        if (metricEventListener != null) {
+//            metricEventListener.onOffRouteEvent(location);
+//        }
     }
 
     void onNavigationEvent(boolean isRunning) {
@@ -194,24 +192,26 @@ class NavigationEventDispatcher {
         }
     }
 
-    void addMetricEventListeners(NavigationMetricListener eventListeners) {
-        if (metricEventListener == null) {
-            metricEventListener = eventListeners;
-        }
-    }
+//    void addMetricEventListeners(NavigationMetricListener eventListeners) {
+//        if (metricEventListener == null) {
+//            metricEventListener = eventListeners;
+//        }
+//    }
 
     private void checkForArrivalEvent(RouteProgress routeProgress) {
-        if (metricEventListener != null && routeUtils.isArrivalEvent(routeProgress)) {
-            metricEventListener.onArrival(routeProgress);
+        if (routeUtils.isArrivalEvent(routeProgress)) {
+//            if (metricEventListener != null) {
+//                metricEventListener.onArrival(routeProgress);
+//            }
             if (routeUtils.isLastLeg(routeProgress)) {
-                metricEventListener = null;
+//                metricEventListener = null;
             }
         }
     }
 
-    private void sendMetricProgressUpdate(RouteProgress routeProgress) {
-        if (metricEventListener != null) {
-            metricEventListener.onRouteProgressUpdate(routeProgress);
-        }
-    }
+//    private void sendMetricProgressUpdate(RouteProgress routeProgress) {
+//        if (metricEventListener != null) {
+//            metricEventListener.onRouteProgressUpdate(routeProgress);
+//        }
+//    }
 }

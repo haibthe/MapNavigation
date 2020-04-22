@@ -11,17 +11,10 @@ import retrofit2.Response;
 
 class NavigationRouteCallback implements Callback<DirectionsResponse> {
 
-    private final NavigationTelemetry telemetry;
     private final NavigationRouteEventListener listener;
     private final Callback<DirectionsResponse> callback;
 
     NavigationRouteCallback(NavigationRouteEventListener listener, Callback<DirectionsResponse> callback) {
-        this(NavigationTelemetry.getInstance(), listener, callback);
-    }
-
-    NavigationRouteCallback(NavigationTelemetry telemetry, NavigationRouteEventListener listener,
-                            Callback<DirectionsResponse> callback) {
-        this.telemetry = telemetry;
         this.listener = listener;
         this.callback = callback;
     }
@@ -45,6 +38,6 @@ class NavigationRouteCallback implements Callback<DirectionsResponse> {
     }
 
     private void sendEventWith(ElapsedTime time, String uuid) {
-        telemetry.routeRetrievalEvent(time, uuid);
+//        telemetry.routeRetrievalEvent(time, uuid);
     }
 }

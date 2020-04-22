@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.auto.value.AutoValue;
 import com.hb.map.navigation.ui.v1.listeners.BannerInstructionsListener;
-import com.hb.map.navigation.ui.v1.listeners.FeedbackListener;
 import com.hb.map.navigation.ui.v1.listeners.InstructionListListener;
 import com.hb.map.navigation.ui.v1.listeners.NavigationListener;
 import com.hb.map.navigation.ui.v1.listeners.RouteListener;
@@ -32,9 +31,6 @@ public abstract class NavigationViewOptions extends NavigationUiOptions {
     }
 
     public abstract MapboxNavigationOptions navigationOptions();
-
-    @Nullable
-    public abstract FeedbackListener feedbackListener();
 
     @Nullable
     public abstract RouteListener routeListener();
@@ -83,8 +79,6 @@ public abstract class NavigationViewOptions extends NavigationUiOptions {
         public abstract Builder waynameChipEnabled(boolean waynameChipEnabled);
 
         public abstract Builder navigationOptions(MapboxNavigationOptions navigationOptions);
-
-        public abstract Builder feedbackListener(FeedbackListener feedbackListener);
 
         public abstract Builder routeListener(RouteListener routeListener);
 

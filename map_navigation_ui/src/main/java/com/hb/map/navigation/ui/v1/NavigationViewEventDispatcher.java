@@ -6,9 +6,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.hb.map.navigation.ui.v1.feedback.FeedbackItem;
 import com.hb.map.navigation.ui.v1.listeners.BannerInstructionsListener;
-import com.hb.map.navigation.ui.v1.listeners.FeedbackListener;
 import com.hb.map.navigation.ui.v1.listeners.InstructionListListener;
 import com.hb.map.navigation.ui.v1.listeners.NavigationListener;
 import com.hb.map.navigation.ui.v1.listeners.RouteListener;
@@ -21,16 +19,10 @@ import com.mapbox.api.directions.v5.models.BannerInstructions;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
 
-/**
- * In charge of holding any {@link NavigationView} related listeners {@link NavigationListener},
- * {@link RouteListener}, or {@link FeedbackListener} and firing listener events when
- * triggered by the {@link NavigationView}.
- */
 class NavigationViewEventDispatcher {
 
     private ProgressChangeListener progressChangeListener;
     private MilestoneEventListener milestoneEventListener;
-    private FeedbackListener feedbackListener;
     private NavigationListener navigationListener;
     private RouteListener routeListener;
     private BottomSheetBehavior.BottomSheetCallback bottomSheetCallback;
@@ -44,7 +36,6 @@ class NavigationViewEventDispatcher {
      * @param navigationViewOptions that contains all listeners to attach
      */
     void initializeListeners(NavigationViewOptions navigationViewOptions, NavigationViewModel navigationViewModel) {
-        assignFeedbackListener(navigationViewOptions.feedbackListener());
         assignNavigationListener(navigationViewOptions.navigationListener(), navigationViewModel);
         assignRouteListener(navigationViewOptions.routeListener());
         assignBottomSheetCallback(navigationViewOptions.bottomSheetCallback());
@@ -61,10 +52,6 @@ class NavigationViewEventDispatcher {
             removeProgressChangeListener(navigation);
             removeMilestoneEventListener(navigation);
         }
-    }
-
-    void assignFeedbackListener(@Nullable FeedbackListener feedbackListener) {
-        this.feedbackListener = feedbackListener;
     }
 
     void assignNavigationListener(@Nullable NavigationListener navigationListener,
@@ -93,24 +80,6 @@ class NavigationViewEventDispatcher {
 
     void assignBannerInstructionsListener(@Nullable BannerInstructionsListener bannerInstructionsListener) {
         this.bannerInstructionsListener = bannerInstructionsListener;
-    }
-
-    void onFeedbackOpened() {
-        if (feedbackListener != null) {
-            feedbackListener.onFeedbackOpened();
-        }
-    }
-
-    void onFeedbackCancelled() {
-        if (feedbackListener != null) {
-            feedbackListener.onFeedbackCancelled();
-        }
-    }
-
-    void onFeedbackSent(FeedbackItem feedbackItem) {
-        if (feedbackListener != null) {
-            feedbackListener.onFeedbackSent(feedbackItem);
-        }
     }
 
     void onNavigationFinished() {

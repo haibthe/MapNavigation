@@ -66,13 +66,4 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp" />
 
-    <com.hb.map.navigation.ui.v1.FeedbackButton
-        android:id="@+id/feedbackLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@id/soundLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
-
 </RelativeLayout>
