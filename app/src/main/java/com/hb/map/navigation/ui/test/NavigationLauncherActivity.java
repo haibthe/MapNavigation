@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -19,13 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.hb.map.navigation.app.R;
 import com.hb.map.navigation.app.databinding.ActivityNavigationLauncherBinding;
+import com.hb.map.navigation.data.repositories.AppRepositoryImpl;
+import com.hb.map.navigation.data.store.AppDataSource;
+import com.hb.map.navigation.data.store.AppLocalDataSource;
+import com.hb.map.navigation.domain.repositories.AppRepository;
 import com.hb.map.navigation.ui.v1.NavigationLauncher;
 import com.hb.map.navigation.ui.v1.NavigationLauncherOptions;
 import com.hb.map.navigation.ui.v1.camera.CameraUpdateMode;
 import com.hb.map.navigation.ui.v1.camera.NavigationCameraUpdate;
 import com.hb.map.navigation.ui.v1.map.NavigationMapboxMap;
 import com.hb.map.navigation.ui.v1.route.OnRouteSelectionChangeListener;
-import com.hb.map.navigation.utils.AppUtils;
 import com.hb.map.navigation.v1.navigation.NavigationRoute;
 import com.hb.map.navigation.v1.utils.LocaleUtils;
 import com.mapbox.android.core.location.LocationEngine;
@@ -60,6 +62,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
@@ -197,6 +202,24 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         }
     }
 
+    void test() {
+        AppDataSource.Local local = new AppLocalDataSource(this);
+        AppDataSource.Service service = new AppDataSource.Service() {
+        };
+        AppRepository repository = new AppRepositoryImpl(local, service);
+        new CompositeDisposable().add(
+                repository.findRoute(new LatLng(), new LatLng())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(route -> {
+                            this.route = route;
+                            mBinding.launchRouteBtn.setEnabled(true);
+                            map.drawRoute(route);
+                            boundCameraToRoute();
+                        }, Timber::e)
+        );
+    }
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onMapReady(@NotNull MapboxMap mapboxMap) {
@@ -207,42 +230,43 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
             map.updateLocationLayerRenderMode(RenderMode.COMPASS);
             initializeLocationEngine();
 
+            test();
 
-            new AsyncTask<Void, Void, DirectionsRoute>() {
-
-                //                String fileTest = "directions_route_convert.json";
-                String fileTest = "directions_test.json";
-//                String fileTest = "directions-route.json";
-
-                @Override
-                protected DirectionsRoute doInBackground(Void... voids) {
-                    try {
-                        String text = AppUtils.loadStringFromAssets(getBaseContext(), fileTest);
-//                        DirectionsResponse response = DirectionsResponse.fromJson(text);
-//                        return response.routes().get(0);
-                        DirectionsRoute route = DirectionsRoute.fromJson(text);
-                        return route;
-
-                    } catch (Exception e) {
-                        Timber.e(e);
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(DirectionsRoute result) {
-                    super.onPostExecute(result);
-                    Timber.d("Result: " + result.toJson());
-                    if (result != null && result.distance() > 25d) {
-                        route = result;
-                        mBinding.launchRouteBtn.setEnabled(true);
-                        map.drawRoute(route);
-                        boundCameraToRoute();
-                    } else {
-                        Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-            }.execute();
+//            new AsyncTask<Void, Void, DirectionsRoute>() {
+//
+//                //                String fileTest = "directions_route_convert.json";
+//                String fileTest = "directions_test.json";
+////                String fileTest = "directions-route.json";
+//
+//                @Override
+//                protected DirectionsRoute doInBackground(Void... voids) {
+//                    try {
+//                        String text = AppUtils.loadStringFromAssets(getBaseContext(), fileTest);
+////                        DirectionsResponse response = DirectionsResponse.fromJson(text);
+////                        return response.routes().get(0);
+//                        DirectionsRoute route = DirectionsRoute.fromJson(text);
+//                        return route;
+//
+//                    } catch (Exception e) {
+//                        Timber.e(e);
+//                    }
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(DirectionsRoute result) {
+//                    super.onPostExecute(result);
+//                    Timber.d("Result: " + result.toJson());
+//                    if (result != null && result.distance() > 25d) {
+//                        route = result;
+//                        mBinding.launchRouteBtn.setEnabled(true);
+//                        map.drawRoute(route);
+//                        boundCameraToRoute();
+//                    } else {
+//                        Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }.execute();
         });
     }
 
@@ -391,7 +415,6 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
                 .build();
         optionsBuilder.initialMapCameraPosition(initialPosition);
         optionsBuilder.directionsRoute(route);
-        optionsBuilder.shouldSimulateRoute(true);
         String offlinePath = obtainOfflinePath();
         if (!TextUtils.isEmpty(offlinePath)) {
             optionsBuilder.offlineRoutingTilesPath(offlinePath);

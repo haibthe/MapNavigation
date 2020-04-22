@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hb.map.navigation.app.databinding.ActivityMainBinding
 import com.hb.map.navigation.ui.test.NavigationLauncherActivity
+import com.hb.map.navigation.ui.test.NavigationSettingsActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, NavigationLauncherActivity::class.java)
             startActivity(intent)
         }
+
+        binding.btnSetting.setOnClickListener {
+            val intent = Intent(this, NavigationSettingsActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 }
