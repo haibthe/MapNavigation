@@ -3,9 +3,6 @@ package com.hb.map.navigation.v1.navigation;
 import android.location.Location;
 import android.os.Handler;
 
-import com.mapbox.api.directions.v5.models.DirectionsRoute;
-import com.mapbox.navigator.NavigationStatus;
-import com.mapbox.navigator.RouteState;
 import com.hb.map.navigation.v1.milestone.Milestone;
 import com.hb.map.navigation.v1.offroute.OffRoute;
 import com.hb.map.navigation.v1.offroute.OffRouteDetector;
@@ -13,6 +10,9 @@ import com.hb.map.navigation.v1.route.FasterRoute;
 import com.hb.map.navigation.v1.routeprogress.RouteProgress;
 import com.hb.map.navigation.v1.snap.Snap;
 import com.hb.map.navigation.v1.snap.SnapToRoute;
+import com.mapbox.api.directions.v5.models.DirectionsRoute;
+import com.mapbox.navigator.NavigationStatus;
+import com.mapbox.navigator.RouteState;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,8 +70,7 @@ class RouteProcessorRunnable implements Runnable {
         NavigationEngineFactory engineFactory = navigation.retrieveEngineFactory();
         final boolean userOffRoute = isUserOffRoute(options, status, rawLocation, routeProgress, engineFactory);
         final Location snappedLocation = findSnappedLocation(status, rawLocation, routeProgress, engineFactory);
-        final boolean checkFasterRoute = checkFasterRoute(options, snappedLocation, routeProgress, engineFactory,
-                userOffRoute);
+        final boolean checkFasterRoute = checkFasterRoute(options, snappedLocation, routeProgress, engineFactory, userOffRoute);
         final List<Milestone> milestones = findTriggeredMilestones(navigation, routeProgress);
 
         sendUpdateToResponseHandler(userOffRoute, milestones, snappedLocation, checkFasterRoute, routeProgress);
@@ -141,14 +140,11 @@ class RouteProcessorRunnable implements Runnable {
     private void sendUpdateToResponseHandler(final boolean userOffRoute, final List<Milestone> milestones,
                                              final Location location, final boolean checkFasterRoute,
                                              final RouteProgress finalRouteProgress) {
-        responseHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                listener.onNewRouteProgress(location, finalRouteProgress);
-                listener.onMilestoneTrigger(milestones, finalRouteProgress);
-                listener.onUserOffRoute(location, userOffRoute);
-                listener.onCheckFasterRoute(location, finalRouteProgress, checkFasterRoute);
-            }
+        responseHandler.post(() -> {
+            listener.onNewRouteProgress(location, finalRouteProgress);
+            listener.onMilestoneTrigger(milestones, finalRouteProgress);
+            listener.onUserOffRoute(location, userOffRoute);
+            listener.onCheckFasterRoute(location, finalRouteProgress, checkFasterRoute);
         });
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.hb.map.navigation.data.entities.VbdRouteResponse
 import com.hb.map.navigation.data.store.AppDataSource
 import com.hb.map.navigation.domain.repositories.AppRepository
-import com.hb.map.navigation.v1.navigation.NavigationConstants
+import com.hb.map.navigation.v1.navigation.NavigationConstants.*
 import com.mapbox.api.directions.v5.models.*
 import com.mapbox.core.constants.Constants.PRECISION_6
 import com.mapbox.geojson.Point
@@ -26,29 +26,29 @@ class AppRepositoryImpl(
             .map(this::mapToDirectionRoute)
     }
 
-    val TEMP = "{\n" +
-            "    \"baseUrl\": \"https://api.mapbox.com\",\n" +
-            "    \"user\": \"mapbox\",\n" +
-            "    \"profile\": \"driving-traffic\",\n" +
-            "    \"coordinates\": [\n" +
-            "      [106.6920881, 10.789958],\n" +
-            "      [106.6841719, 10.7767865]\n" +
-            "    ],\n" +
-            "    \"alternatives\": true,\n" +
-            "    \"language\": \"en\",\n" +
-            "    \"bearings\": \";\",\n" +
-            "    \"continue_straight\": true,\n" +
-            "    \"roundabout_exits\": true,\n" +
-            "    \"geometries\": \"polyline6\",\n" +
-            "    \"overview\": \"full\",\n" +
-            "    \"steps\": true,\n" +
-            "    \"annotations\": \"congestion,distance\",\n" +
-            "    \"voice_instructions\": true,\n" +
-            "    \"banner_instructions\": true,\n" +
-            "    \"voice_units\": \"metric\",\n" +
-            "    \"access_token\": \"pk.eyJ1Ijoibm9uMjM1IiwiYSI6ImNrOGFnZHYzcDAxdDMzb3BpNmthdW1lMHAifQ.BmGzpCy_5Pl2XxIS7XCYbA\",\n" +
-            "    \"uuid\": \"ck953h0pk00an5qqnkl9zcca5\"\n" +
-            "  }";
+    val TEMP = "{" +
+            "    \"baseUrl\": \"\"," +
+            "    \"user\": \"mapbox\"," +
+            "    \"profile\": \"driving-traffic\"," +
+            "    \"coordinates\": [" +
+            "      [106.691777, 10.789965]," +
+            "      [106.677222, 10.774447]" +
+            "    ]," +
+            "    \"alternatives\": faolse," +
+            "    \"language\": \"en\"," +
+            "    \"bearings\": \";\"," +
+            "    \"continue_straight\": true," +
+            "    \"roundabout_exits\": true," +
+            "    \"geometries\": \"polyline6\"," +
+            "    \"overview\": \"full\"," +
+            "    \"steps\": true," +
+            "    \"annotations\": \"congestion,distance\"," +
+            "    \"voice_instructions\": true," +
+            "    \"banner_instructions\": true," +
+            "    \"voice_units\": \"metric\"," +
+            "    \"access_token\": \"pk.eyJ1Ijoibm9uMjM1IiwiYSI6ImNrOGFnZHYzcDAxdDMzb3BpNmthdW1lMHAifQ.BmGzpCy_5Pl2XxIS7XCYbA\"," +
+            "    \"uuid\": \"ck953h0pk00an5qqnkl9zcca5\"" +
+            "  }"
 
     private fun routeOptions(): RouteOptions {
         return RouteOptions.fromJson(TEMP)
@@ -77,17 +77,20 @@ class AppRepositoryImpl(
                 val path = PolylineUtils.decode(route.geometry, PRECISION_6)
                 val steps = ArrayList<LegStep>()
                 var idx = 0
+                val bc = BannerComponents.builder().type("text")
+                val bt = BannerText.builder()
+                val banner = BannerInstructions.builder()
                 for (i in 0 until size) {
 
                     val pair = (idx to indices[i])
                     idx = indices[i]
                     val point = path[indices[i]]
-                    val beforeIndex = if (indices[i] == 0) 0 else indices[i] - 1
-                    val afterIndex =
-                        if (indices[i] == totalIndices) totalIndices else indices[i] + 1
-                    val beforeBearing =
-                        kotlin.math.abs(TurfMeasurement.bearing(point, path[beforeIndex]))
-                    val bearing = kotlin.math.abs(TurfMeasurement.bearing(point, path[afterIndex]))
+//                    val beforeIndex = if (indices[i] == 0) 0 else indices[i] - 1
+//                    val afterIndex = if (indices[i] == totalIndices) totalIndices else indices[i] + 1
+                    val beforeBearing = 0.0
+//                    kotlin.math.abs(TurfMeasurement.bearing(point, path[beforeIndex]))
+                    val bearing = 0.0
+//                    kotlin.math.abs(TurfMeasurement.bearing(point, path[afterIndex]))
                     val subPath = arrayListOf<Point>()
                     if (i == 0) {
                         subPath.add(Point.fromLngLat(106.6923, 10.7901))
@@ -95,32 +98,40 @@ class AppRepositoryImpl(
                     for (j in pair.first..pair.second) {
                         subPath.add(path[j])
                     }
-
+                    val guide = getGuide(turns[i])
                     val bannerList = ArrayList<BannerInstructions>()
                     if (turns[i] != 15) {
-                        val guideNext = getGuide(turns[i])
-                        val banner = BannerInstructions.builder()
-                            .distanceAlongGeometry(distances[i].toDouble())
-                            .primary(
-                                BannerText.builder()
-                                    .type(guideNext.first)
-                                    .modifier(guideNext.second)
-                                    .components(
-                                        listOf(
-                                            BannerComponents.builder()
-                                                .text(
-                                                    if (turns[i] == 15) "Đến nơi" else names[i + 1]
-                                                )
-                                                .type("text")
-                                                .build()
-                                        )
-                                    )!!
-                                    .text(
-                                        if (turns[i] == 15) "Đến nơi" else names[i + 1]
-                                    )!!
-                                    .build()
-                            ).build()
-                        bannerList.add(banner)
+                        banner.distanceAlongGeometry(distances[i].toDouble())
+                        var name = names[i].replace("Đường", "")
+                        bc.text(name)
+                        bt.type(guide.first)
+                            .modifier(guide.second)
+                            .text(name)!!
+                            .components(listOf(bc.build()))
+                        banner.primary(bt.build())
+
+
+                        val guideNext = getGuide(turns[i + 1])
+                        name = names[i + 1].replace("Đường", "")
+                        bc.text(name)
+                        bt.type(guideNext.first)
+                            .modifier(guideNext.second)
+                            .text(name)!!
+                            .components(listOf(bc.build()))
+                        banner.sub(bt.build())
+
+                        bannerList.add(banner.build())
+                    } else {
+                        val text = "Đến nơi" + names[i]
+                        bc.text(text)
+                        bt.type(guide.first)
+                            .modifier(guide.second)
+                            .text(text)!!
+                            .components(listOf(bc.build()))
+
+                        banner.distanceAlongGeometry(distances[i].toDouble())
+                            .primary(bt.build())
+                        bannerList.add(banner.build())
                     }
 
                     val intersection = StepIntersection.builder()
@@ -130,7 +141,7 @@ class AppRepositoryImpl(
                         .out(0)
                         .build()
 
-                    val guide = getGuide(turns[i])
+
                     val maneuver = StepManeuver.builder()
                         .bearingBefore(beforeBearing)
                         .bearingAfter(bearing)
@@ -154,7 +165,7 @@ class AppRepositoryImpl(
                         .bannerInstructions(bannerList)
 
 
-                    if (turns[i] == 11) {
+                    if (turns[i] in 11..12) {
                         stepBuilder.rotaryName(StepManeuver.ROTARY)
                     }
 
@@ -177,26 +188,25 @@ class AppRepositoryImpl(
 
         val result = builder.build()
 
-        val temp = Gson().toJson(result);
+        val temp = Gson().toJson(result)
+        Timber.i("DirectionsRoute: $temp")
 
         return result
     }
 
     private fun getGuide(turn: Int): Pair<String, String> {
         return when (turn) {
-            1 -> (StepManeuver.CONTINUE to NavigationConstants.STEP_MANEUVER_MODIFIER_STRAIGHT)
-            2 -> (StepManeuver.TURN to NavigationConstants.STEP_MANEUVER_MODIFIER_SLIGHT_RIGHT)
-            3 -> (StepManeuver.TURN to NavigationConstants.STEP_MANEUVER_MODIFIER_RIGHT)
-            5 -> (StepManeuver.TURN to NavigationConstants.STEP_MANEUVER_MODIFIER_LEFT)
-            7 -> (StepManeuver.TURN to NavigationConstants.STEP_MANEUVER_MODIFIER_SLIGHT_LEFT)
-            8 -> (StepManeuver.TURN to NavigationConstants.STEP_MANEUVER_MODIFIER_LEFT)
-            10 -> (StepManeuver.DEPART to NavigationConstants.STEP_MANEUVER_MODIFIER_STRAIGHT)
-            11 -> (StepManeuver.ROUNDABOUT to NavigationConstants.STEP_MANEUVER_MODIFIER_RIGHT)
-            12 -> (StepManeuver.EXIT_ROUNDABOUT to NavigationConstants.STEP_MANEUVER_MODIFIER_RIGHT)
-            15 -> (StepManeuver.ARRIVE to NavigationConstants.STEP_MANEUVER_MODIFIER_RIGHT)
-            else -> (StepManeuver.CONTINUE to NavigationConstants.STEP_MANEUVER_MODIFIER_STRAIGHT)
+            1 -> (StepManeuver.CONTINUE to STEP_MANEUVER_MODIFIER_STRAIGHT)
+            2 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_SLIGHT_RIGHT)
+            3 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_RIGHT)
+            5 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_UTURN)
+            7 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_SLIGHT_LEFT)
+            8 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_LEFT)
+            10 -> (StepManeuver.DEPART to STEP_MANEUVER_MODIFIER_STRAIGHT)
+            11 -> (StepManeuver.ROUNDABOUT to STEP_MANEUVER_TYPE_ROUNDABOUT)
+            12 -> (StepManeuver.TURN to STEP_MANEUVER_MODIFIER_RIGHT)
+            15 -> (StepManeuver.ARRIVE to STEP_MANEUVER_MODIFIER_RIGHT)
+            else -> (StepManeuver.CONTINUE to STEP_MANEUVER_MODIFIER_STRAIGHT)
         }
     }
-
-
 }
