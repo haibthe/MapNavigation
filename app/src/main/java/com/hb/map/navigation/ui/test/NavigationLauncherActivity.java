@@ -75,9 +75,9 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         MapboxMap.OnMapLongClickListener, OnRouteSelectionChangeListener {
 
     private static final int CAMERA_ANIMATION_DURATION = 1000;
-    private static final int DEFAULT_CAMERA_ZOOM = 16;
+    private static final int DEFAULT_CAMERA_ZOOM = 18;
     private static final int CHANGE_SETTING_REQUEST_CODE = 1;
-    private static final int INITIAL_ZOOM = 16;
+    private static final int INITIAL_ZOOM = 18;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 500;
 
@@ -220,10 +220,13 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         );
     }
 
+    String styleVBD = "https://images.vietbando.com/Style/vt_vbddefault/306ec9b5-8146-4a83-9271-bd7b343a574a";
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onMapReady(@NotNull MapboxMap mapboxMap) {
-        mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+        Style.Builder builder = new Style.Builder();
+        mapboxMap.setStyle(builder.fromUri(styleVBD), style -> {
             mapboxMap.addOnMapLongClickListener(this);
             map = new NavigationMapboxMap(mBinding.mapView, mapboxMap);
             map.setOnRouteSelectionChangeListener(this);

@@ -116,7 +116,7 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         mapView.onCreate(savedInstanceState);
         updatePresenterState(savedInstanceState);
         lifecycleRegistry = new LifecycleRegistry(this);
-        lifecycleRegistry.markState(Lifecycle.State.CREATED);
+        lifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
     }
 
     /**
@@ -137,13 +137,6 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         return instructionView.handleBackPressed();
     }
 
-    /**
-     * Used to store the bottomsheet state and re-center
-     * button visibility.  As well as anything the {@link MapView}
-     * needs to store in the bundle.
-     *
-     * @param outState to store state variables
-     */
     public void onSaveInstanceState(Bundle outState) {
         int bottomSheetBehaviorState = summaryBehavior == null ? INVALID_STATE : summaryBehavior.getState();
         boolean isWayNameVisible = wayNameView.getVisibility() == VISIBLE;
@@ -157,13 +150,6 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         saveNavigationMapInstanceState(outState);
     }
 
-    /**
-     * Used to restore the bottomsheet state and re-center
-     * button visibility.  As well as the {@link MapView}
-     * position prior to rotation.
-     *
-     * @param savedInstanceState to extract state variables
-     */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         String instanceKey = getContext().getString(R.string.navigation_view_instance_state);
         NavigationViewInstanceState navigationViewInstanceState = savedInstanceState.getParcelable(instanceKey);
@@ -176,18 +162,9 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         mapInstanceState = savedInstanceState.getParcelable(MAP_INSTANCE_STATE_KEY);
     }
 
-    /**
-     * Called to ensure the {@link MapView} is destroyed
-     * properly.
-     * <p>
-     * In an {@link Activity} this should be in {@link Activity#onDestroy()}.
-     * <p>
-     * In a {@link android.support.v4.app.Fragment}, this should
-     * be in {@link android.support.v4.app.Fragment#onDestroyView()}.
-     */
     public void onDestroy() {
         shutdown();
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED);
+        lifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
     }
 
     public void onStart() {
@@ -195,12 +172,12 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         if (navigationMap != null) {
             navigationMap.onStart();
         }
-        lifecycleRegistry.markState(Lifecycle.State.STARTED);
+        lifecycleRegistry.setCurrentState(Lifecycle.State.STARTED);
     }
 
     public void onResume() {
         mapView.onResume();
-        lifecycleRegistry.markState(Lifecycle.State.RESUMED);
+        lifecycleRegistry.setCurrentState(Lifecycle.State.RESUMED);
     }
 
     public void onPause() {
@@ -220,26 +197,21 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         return lifecycleRegistry;
     }
 
-    /**
-     * Fired after the map is ready, this is our cue to finish
-     * setting up the rest of the plugins / location engine.
-     * <p>
-     * Also, we check for launch data (coordinates or route).
-     *
-     * @param mapboxMap used for route, camera, and location UI
-     * @since 0.6.0
-     */
     @Override
     public void onMapReady(final MapboxMap mapboxMap) {
-        mapboxMap.setStyle(ThemeSwitcher.retrieveMapStyle(getContext()), new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                initializeNavigationMap(mapView, mapboxMap);
-                initializeWayNameListener();
-                onNavigationReadyCallback.onNavigationReady(navigationViewModel.isRunning());
-                isMapInitialized = true;
-            }
-        });
+        Object temp = ThemeSwitcher.retrieveMapStyle(getContext());
+        Style.OnStyleLoaded callBack = style -> {
+            initializeNavigationMap(mapView, mapboxMap);
+            initializeWayNameListener();
+            onNavigationReadyCallback.onNavigationReady(navigationViewModel.isRunning());
+            isMapInitialized = true;
+        };
+        if (temp instanceof String) {
+            mapboxMap.setStyle((String) temp, callBack);
+        } else if (temp instanceof Style.Builder) {
+            Style.Builder builder = (Style.Builder) temp;
+            mapboxMap.setStyle(builder, callBack);
+        }
     }
 
     @Override
@@ -294,40 +266,16 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Provides the current visibility of the way name view.
-     *
-     * @return true if visible, false if not visible
-     */
     public boolean isWayNameVisible() {
         return wayNameView.getVisibility() == VISIBLE;
     }
 
-    /**
-     * Updates the text of the way name view below the
-     * navigation icon.
-     * <p>
-     * If you'd like to use this method without being overridden by the default way names
-     * values we provide, please disabled auto-query with
-     * {@link NavigationMapboxMap#updateWaynameQueryMap(boolean)}.
-     *
-     * @param wayName to update the view
-     */
     @Override
     public void updateWayNameView(@NonNull String wayName) {
         wayNameView.updateWayNameText(wayName);
     }
 
-    /**
-     * Updates the visibility of the way name view that is show below
-     * the navigation icon.
-     * <p>
-     * If you'd like to use this method without being overridden by the default visibility values
-     * values we provide, please disabled auto-query with
-     * {@link NavigationMapboxMap#updateWaynameQueryMap(boolean)}.
-     *
-     * @param isVisible true to show, false to hide
-     */
+
     @Override
     public void updateWayNameVisibility(boolean isVisible) {
         wayNameView.updateVisibility(isVisible);
@@ -343,14 +291,7 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Used when starting this {@link android.app.Activity}
-     * for the first time.
-     * <p>
-     * Zooms to the beginning of the {@link DirectionsRoute}.
-     *
-     * @param directionsRoute where camera should move to
-     */
+
     @Override
     public void startCamera(DirectionsRoute directionsRoute) {
         if (navigationMap != null) {
@@ -358,12 +299,7 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Used after configuration changes to resume the camera
-     * to the last location update from the Navigation SDK.
-     *
-     * @param location where the camera should move to
-     */
+
     @Override
     public void resumeCamera(Location location) {
         if (navigationMap != null) {
@@ -386,33 +322,16 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Should be called when this view is completely initialized.
-     *
-     * @param options with containing route / coordinate data
-     */
     public void startNavigation(NavigationViewOptions options) {
         initializeNavigation(options);
     }
 
-    /**
-     * Call this when the navigation session needs to end navigation without finishing the whole view
-     *
-     * @since 0.16.0
-     */
     public void stopNavigation() {
         navigationPresenter.onNavigationStopped();
         navigationViewModel.stopNavigation();
     }
 
-    /**
-     * Should be called after {@link NavigationView#onCreate(Bundle)}.
-     * <p>
-     * This method adds the {@link OnNavigationReadyCallback},
-     * which will fire the ready events for this view.
-     *
-     * @param onNavigationReadyCallback to be set to this view
-     */
+
     public void initialize(OnNavigationReadyCallback onNavigationReadyCallback) {
         this.onNavigationReadyCallback = onNavigationReadyCallback;
         if (!isMapInitialized) {
@@ -422,18 +341,6 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Should be called after {@link NavigationView#onCreate(Bundle)}.
-     * <p>
-     * This method adds the {@link OnNavigationReadyCallback},
-     * which will fire the ready events for this view.
-     * <p>
-     * This method also accepts a {@link CameraPosition} that will be set as soon as the map is
-     * ready.  Note, this position is ignored during rotation in favor of the last known map position.
-     *
-     * @param onNavigationReadyCallback to be set to this view
-     * @param initialMapCameraPosition  to be shown once the map is ready
-     */
     public void initialize(OnNavigationReadyCallback onNavigationReadyCallback,
                            @NonNull CameraPosition initialMapCameraPosition) {
         this.onNavigationReadyCallback = onNavigationReadyCallback;
@@ -445,45 +352,23 @@ public class NavigationView extends CoordinatorLayout implements LifecycleOwner,
         }
     }
 
-    /**
-     * Gives the ability to manipulate the map directly for anything that might not currently be
-     * supported. This returns null until the view is initialized.
-     * <p>
-     * The {@link NavigationMapboxMap} gives direct access to the map UI (location marker, route, etc.).
-     *
-     * @return navigation mapbox map object, or null if view has not been initialized
-     */
+
     @Nullable
     public NavigationMapboxMap retrieveNavigationMapboxMap() {
         return navigationMap;
     }
 
-    /**
-     * Returns the instance of {@link MapboxNavigation} powering the {@link NavigationView}
-     * once navigation has started.  Will return null if navigation has not been started with
-     * {@link NavigationView#startNavigation(NavigationViewOptions)}.
-     *
-     * @return mapbox navigation, or null if navigation has not started
-     */
+
     @Nullable
     public MapboxNavigation retrieveMapboxNavigation() {
         return navigationViewModel.retrieveNavigation();
     }
 
-    /**
-     * Returns the sound button used for muting instructions
-     *
-     * @return sound button
-     */
+
     public NavigationButton retrieveSoundButton() {
         return instructionView.retrieveSoundButton();
     }
 
-    /**
-     * Returns the re-center button for recentering on current location
-     *
-     * @return recenter button
-     */
     public NavigationButton retrieveRecenterButton() {
         return recenterBtn;
     }

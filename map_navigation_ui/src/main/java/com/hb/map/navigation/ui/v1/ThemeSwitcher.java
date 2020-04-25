@@ -15,6 +15,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.hb.map.navigation.v1.navigation.NavigationConstants;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
 /**
@@ -106,9 +107,16 @@ public class ThemeSwitcher {
         context.setTheme(nightModeEnabled ? darkTheme : lightTheme);
     }
 
-    static String retrieveMapStyle(Context context) {
+    static Object retrieveMapStyle(Context context) {
         TypedValue mapStyleAttr = resolveAttributeFromId(context, R.attr.navigationViewMapStyle);
-        return mapStyleAttr.string.toString();
+        String temp = mapStyleAttr.string.toString();
+        if (temp.contains("mapbox://")) {
+            return temp;
+        } else {
+            Style.Builder builder = new Style.Builder();
+            builder.fromUri(temp);
+            return builder;
+        }
     }
 
     /**

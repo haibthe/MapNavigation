@@ -49,13 +49,15 @@
     <string name="dropoff_dialog_negative_text">Hủy bỏ</string>
 
     <!-- Should not be translated -->
-    <string name="navigation_guidance_day"
-        translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>
-    <string name="navigation_guidance_night"
-        translatable="false">mapbox://styles/mapbox/navigation-guidance-night-v4</string>
-    <string name="navigation_view_instance_state"
-        translatable="false">navigation_view_instance_state</string>
-    <string name="navigation_running"
-        translatable="false">navigation_running</string>
+<!--    <string name="navigation_guidance_day" translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>-->
+<!--    <string name="navigation_guidance_night" translatable="false">mapbox://styles/mapbox/navigation-guidance-night-v4</string>-->
+
+    <string name="navigation_guidance_day" translatable="false">https://images.vietbando.com/Style/vt_vbddefault/306ec9b5-8146-4a83-9271-bd7b343a574a</string>
+    <string name="navigation_guidance_night" translatable="false">https://images.vietbando.com/Style/vt_vbddark/306ec9b5-8146-4a83-9271-bd7b343a574a</string>
+
+<!--    https://images.vietbando.com-->
+<!--    https://images.vietbando.com-->
+    <string name="navigation_view_instance_state" translatable="false">navigation_view_instance_state</string>
+    <string name="navigation_running" translatable="false">navigation_running</string>
 
 </resources>
