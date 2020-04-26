@@ -16,7 +16,7 @@ public class OffRouteDetector extends OffRoute {
     }
 
     public boolean isUserOffRouteWith(NavigationStatus status) {
-//        return status.getRouteState() == RouteState.OFFROUTE;
-        return false;
+        return status.getRouteState() == RouteState.OFFROUTE;
+//        return false;
     }
 }

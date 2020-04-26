@@ -2,6 +2,7 @@ package com.hb.map.navigation.ui.v1.map;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -42,6 +43,9 @@ public class WayNameView extends FrameLayout {
 
     public void updateVisibility(boolean isVisible) {
         int visibility = isVisible ? VISIBLE : INVISIBLE;
+        if (TextUtils.isEmpty(wayNameText.getText())) {
+            visibility = INVISIBLE;
+        }
         if (getVisibility() != visibility) {
             setVisibility(visibility);
         }

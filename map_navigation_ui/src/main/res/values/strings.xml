@@ -52,8 +52,8 @@
 <!--    <string name="navigation_guidance_day" translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>-->
 <!--    <string name="navigation_guidance_night" translatable="false">mapbox://styles/mapbox/navigation-guidance-night-v4</string>-->
 
-    <string name="navigation_guidance_day" translatable="false">https://images.vietbando.com/Style/vt_vbddefault/306ec9b5-8146-4a83-9271-bd7b343a574a</string>
-    <string name="navigation_guidance_night" translatable="false">https://images.vietbando.com/Style/vt_vbddark/306ec9b5-8146-4a83-9271-bd7b343a574a</string>
+    <string name="navigation_guidance_day" translatable="false">https://raw.githubusercontent.com/haibthe/OpenData/master/map_default_style.json</string>
+    <string name="navigation_guidance_night" translatable="false">https://raw.githubusercontent.com/haibthe/OpenData/master/map_dark_style.json</string>
 
 <!--    https://images.vietbando.com-->
 <!--    https://images.vietbando.com-->

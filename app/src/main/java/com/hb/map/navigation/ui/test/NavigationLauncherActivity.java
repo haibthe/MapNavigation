@@ -234,42 +234,6 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
             initializeLocationEngine();
 
             test();
-
-//            new AsyncTask<Void, Void, DirectionsRoute>() {
-//
-//                //                String fileTest = "directions_route_convert.json";
-//                String fileTest = "directions_test.json";
-////                String fileTest = "directions-route.json";
-//
-//                @Override
-//                protected DirectionsRoute doInBackground(Void... voids) {
-//                    try {
-//                        String text = AppUtils.loadStringFromAssets(getBaseContext(), fileTest);
-////                        DirectionsResponse response = DirectionsResponse.fromJson(text);
-////                        return response.routes().get(0);
-//                        DirectionsRoute route = DirectionsRoute.fromJson(text);
-//                        return route;
-//
-//                    } catch (Exception e) {
-//                        Timber.e(e);
-//                    }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(DirectionsRoute result) {
-//                    super.onPostExecute(result);
-//                    Timber.d("Result: " + result.toJson());
-//                    if (result != null && result.distance() > 25d) {
-//                        route = result;
-//                        mBinding.launchRouteBtn.setEnabled(true);
-//                        map.drawRoute(route);
-//                        boundCameraToRoute();
-//                    } else {
-//                        Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }.execute();
         });
     }
 
@@ -324,63 +288,38 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
     }
 
     private void fetchRoute() {
-        NavigationRoute.Builder builder = NavigationRoute.builder(this)
-                .accessToken(Mapbox.getAccessToken())
-                .origin(currentLocation)
-                .profile(getRouteProfileFromSharedPreferences())
-                .alternatives(true);
+        NavigationRoute.Builder builder = NavigationRoute.builder()
+                .origin(currentLocation);
 
         for (Point wayPoint : wayPoints) {
             builder.addWaypoint(wayPoint);
         }
 
-        setFieldsFromSharedPreferences(builder);
-        builder.build().getRoute(new SimplifiedCallback() {
+        builder.build().getRoute(new NavigationRoute.ICallback() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                if (validRouteResponse(response)) {
+            public void onResponse(DirectionsResponse response) {
+                if (response != null && !response.routes().isEmpty()) {
                     hideLoading();
-                    route = response.body().routes().get(0);
+                    route = response.routes().get(0);
                     if (route.distance() > 25d) {
                         mBinding.launchRouteBtn.setEnabled(true);
-                        map.drawRoutes(response.body().routes());
+                        map.drawRoutes(response.routes());
                         boundCameraToRoute();
                     } else {
                         Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Timber.e(throwable, throwable.getMessage());
+            }
         });
+
         mBinding.loading.setVisibility(View.VISIBLE);
     }
 
-    private void setFieldsFromSharedPreferences(NavigationRoute.Builder builder) {
-        builder
-                .language(getLanguageFromSharedPreferences())
-                .voiceUnits(getUnitTypeFromSharedPreferences());
-    }
-
-    private String getUnitTypeFromSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultUnitType = getString(R.string.default_unit_type);
-        String unitType = sharedPreferences.getString(getString(R.string.unit_type_key), defaultUnitType);
-        if (unitType.equals(defaultUnitType)) {
-            unitType = localeUtils.getUnitTypeForDeviceLocale(this);
-        }
-
-        return unitType;
-    }
-
-    private Locale getLanguageFromSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultLanguage = getString(R.string.default_locale);
-        String language = sharedPreferences.getString(getString(R.string.language_key), defaultLanguage);
-        if (language.equals(defaultLanguage)) {
-            return localeUtils.inferDeviceLocale(this);
-        } else {
-            return new Locale(language);
-        }
-    }
 
     private boolean getShouldSimulateRouteFromSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -426,6 +365,8 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         if (!offlineVersion.isEmpty()) {
             optionsBuilder.offlineRoutingTilesVersion(offlineVersion);
         }
+        optionsBuilder.darkThemeResId(R.style.MyNavigationDark);
+        optionsBuilder.lightThemeResId(R.style.MyNavigationLight);
         // TODO Testing dynamic offline
         /**
          * File downloadDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -433,6 +374,7 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
          * String offlineStyleUrl = "mapbox://styles/mapbox/navigation-guidance-day-v4";
          * optionsBuilder.offlineMapOptions(new MapOfflineOptions(databaseFilePath, offlineStyleUrl));
          */
+
         NavigationLauncher.startNavigation(this, optionsBuilder.build());
     }
 

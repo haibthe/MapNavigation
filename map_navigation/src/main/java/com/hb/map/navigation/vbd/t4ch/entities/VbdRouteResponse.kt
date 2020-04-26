@@ -1,4 +1,4 @@
-package com.hb.map.navigation.data.entities
+package com.hb.map.navigation.vbd.t4ch.entities
 
 import com.google.gson.annotations.SerializedName
 

@@ -18,6 +18,8 @@ import com.hb.map.navigation.v1.navigation.NavigationConstants;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
+import java.util.Calendar;
+
 /**
  * This class is used to switch theme colors in {@link NavigationView}.
  */
@@ -123,8 +125,10 @@ public class ThemeSwitcher {
      * Returns true if the current UI_MODE_NIGHT is enabled, false otherwise.
      */
     private static boolean isNightModeEnabled(Context context) {
-        int currentNightMode = retrieveCurrentUiMode(context);
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return 7 >= hour || hour >= 18;
+//        int currentNightMode = retrieveCurrentUiMode(context);
+//        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private static int retrieveCurrentUiMode(Context context) {
