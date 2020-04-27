@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -19,13 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.hb.map.navigation.app.R;
 import com.hb.map.navigation.app.databinding.ActivityNavigationLauncherBinding;
+import com.hb.map.navigation.data.repositories.AppRepositoryImpl;
+import com.hb.map.navigation.data.store.AppDataSource;
+import com.hb.map.navigation.data.store.AppLocalDataSource;
+import com.hb.map.navigation.domain.repositories.AppRepository;
 import com.hb.map.navigation.ui.v1.NavigationLauncher;
 import com.hb.map.navigation.ui.v1.NavigationLauncherOptions;
 import com.hb.map.navigation.ui.v1.camera.CameraUpdateMode;
 import com.hb.map.navigation.ui.v1.camera.NavigationCameraUpdate;
 import com.hb.map.navigation.ui.v1.map.NavigationMapboxMap;
 import com.hb.map.navigation.ui.v1.route.OnRouteSelectionChangeListener;
-import com.hb.map.navigation.utils.AppUtils;
 import com.hb.map.navigation.v1.navigation.NavigationRoute;
 import com.hb.map.navigation.v1.utils.LocaleUtils;
 import com.mapbox.android.core.location.LocationEngine;
@@ -60,6 +62,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
@@ -70,9 +75,9 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         MapboxMap.OnMapLongClickListener, OnRouteSelectionChangeListener {
 
     private static final int CAMERA_ANIMATION_DURATION = 1000;
-    private static final int DEFAULT_CAMERA_ZOOM = 16;
+    private static final int DEFAULT_CAMERA_ZOOM = 18;
     private static final int CHANGE_SETTING_REQUEST_CODE = 1;
-    private static final int INITIAL_ZOOM = 16;
+    private static final int INITIAL_ZOOM = 18;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 500;
 
@@ -91,6 +96,8 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentLocation = Point.fromLngLat(106.68986, 10.805176);
 
         mBinding = ActivityNavigationLauncherBinding.inflate(getLayoutInflater());
 
@@ -195,52 +202,38 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         }
     }
 
+    void test() {
+        AppDataSource.Local local = new AppLocalDataSource(this);
+        AppDataSource.Service service = new AppDataSource.Service() {
+        };
+        AppRepository repository = new AppRepositoryImpl(local, service);
+        new CompositeDisposable().add(
+                repository.findRoute(new LatLng(), new LatLng())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(route -> {
+                            this.route = route;
+                            mBinding.launchRouteBtn.setEnabled(true);
+                            map.drawRoute(route);
+                            boundCameraToRoute();
+                        }, Timber::e)
+        );
+    }
+
+    String styleVBD = "https://images.vietbando.com/Style/vt_vbddefault/306ec9b5-8146-4a83-9271-bd7b343a574a";
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onMapReady(@NotNull MapboxMap mapboxMap) {
-        mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+        Style.Builder builder = new Style.Builder();
+        mapboxMap.setStyle(builder.fromUri(styleVBD), style -> {
             mapboxMap.addOnMapLongClickListener(this);
             map = new NavigationMapboxMap(mBinding.mapView, mapboxMap);
             map.setOnRouteSelectionChangeListener(this);
             map.updateLocationLayerRenderMode(RenderMode.COMPASS);
             initializeLocationEngine();
 
-
-            new AsyncTask<Void, Void, DirectionsRoute>() {
-
-                //                String fileTest = "directions_route_convert.json";
-                String fileTest = "directions_test.json";
-//                String fileTest = "directions-route.json";
-
-                @Override
-                protected DirectionsRoute doInBackground(Void... voids) {
-                    try {
-                        String text = AppUtils.loadStringFromAssets(getBaseContext(), fileTest);
-//                        DirectionsResponse response = DirectionsResponse.fromJson(text);
-//                        return response.routes().get(0);
-                        DirectionsRoute route = DirectionsRoute.fromJson(text);
-                        return route;
-
-                    } catch (Exception e) {
-                        Timber.e(e);
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(DirectionsRoute result) {
-                    super.onPostExecute(result);
-                    Timber.d("Result: " + result.toJson());
-                    if (result != null && result.distance() > 25d) {
-                        route = result;
-                        mBinding.launchRouteBtn.setEnabled(true);
-                        map.drawRoute(route);
-                        boundCameraToRoute();
-                    } else {
-                        Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-            }.execute();
+            test();
         });
     }
 
@@ -295,63 +288,38 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
     }
 
     private void fetchRoute() {
-        NavigationRoute.Builder builder = NavigationRoute.builder(this)
-                .accessToken(Mapbox.getAccessToken())
-                .origin(currentLocation)
-                .profile(getRouteProfileFromSharedPreferences())
-                .alternatives(true);
+        NavigationRoute.Builder builder = NavigationRoute.builder()
+                .origin(currentLocation);
 
         for (Point wayPoint : wayPoints) {
             builder.addWaypoint(wayPoint);
         }
 
-        setFieldsFromSharedPreferences(builder);
-        builder.build().getRoute(new SimplifiedCallback() {
+        builder.build().getRoute(new NavigationRoute.ICallback() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                if (validRouteResponse(response)) {
+            public void onResponse(DirectionsResponse response) {
+                if (response != null && !response.routes().isEmpty()) {
                     hideLoading();
-                    route = response.body().routes().get(0);
+                    route = response.routes().get(0);
                     if (route.distance() > 25d) {
                         mBinding.launchRouteBtn.setEnabled(true);
-                        map.drawRoutes(response.body().routes());
+                        map.drawRoutes(response.routes());
                         boundCameraToRoute();
                     } else {
                         Snackbar.make(mBinding.mapView, R.string.error_select_longer_route, Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Timber.e(throwable, throwable.getMessage());
+            }
         });
+
         mBinding.loading.setVisibility(View.VISIBLE);
     }
 
-    private void setFieldsFromSharedPreferences(NavigationRoute.Builder builder) {
-        builder
-                .language(getLanguageFromSharedPreferences())
-                .voiceUnits(getUnitTypeFromSharedPreferences());
-    }
-
-    private String getUnitTypeFromSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultUnitType = getString(R.string.default_unit_type);
-        String unitType = sharedPreferences.getString(getString(R.string.unit_type_key), defaultUnitType);
-        if (unitType.equals(defaultUnitType)) {
-            unitType = localeUtils.getUnitTypeForDeviceLocale(this);
-        }
-
-        return unitType;
-    }
-
-    private Locale getLanguageFromSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultLanguage = getString(R.string.default_locale);
-        String language = sharedPreferences.getString(getString(R.string.language_key), defaultLanguage);
-        if (language.equals(defaultLanguage)) {
-            return localeUtils.inferDeviceLocale(this);
-        } else {
-            return new Locale(language);
-        }
-    }
 
     private boolean getShouldSimulateRouteFromSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -397,6 +365,8 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
         if (!offlineVersion.isEmpty()) {
             optionsBuilder.offlineRoutingTilesVersion(offlineVersion);
         }
+        optionsBuilder.darkThemeResId(R.style.MyNavigationDark);
+        optionsBuilder.lightThemeResId(R.style.MyNavigationLight);
         // TODO Testing dynamic offline
         /**
          * File downloadDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -404,6 +374,7 @@ public class NavigationLauncherActivity extends AppCompatActivity implements OnM
          * String offlineStyleUrl = "mapbox://styles/mapbox/navigation-guidance-day-v4";
          * optionsBuilder.offlineMapOptions(new MapOfflineOptions(databaseFilePath, offlineStyleUrl));
          */
+
         NavigationLauncher.startNavigation(this, optionsBuilder.build());
     }
 

@@ -39,11 +39,11 @@ public final class ValidationUtils {
     }
 
     private static void checkInvalidBannerInstructions(RouteOptions routeOptions) {
-        Boolean instructions = routeOptions.bannerInstructions();
-        boolean invalidBannerInstructions = instructions == null || !instructions;
-        if (invalidBannerInstructions) {
-            throw new MissingFormatArgumentException("Using the default milestones requires the "
-                    + "directions route to be requested with banner instructions enabled.");
-        }
+//        Boolean instructions = routeOptions.bannerInstructions();
+//        boolean invalidBannerInstructions = instructions == null || !instructions;
+//        if (invalidBannerInstructions) {
+//            throw new MissingFormatArgumentException("Using the default milestones requires the "
+//                    + "directions route to be requested with banner instructions enabled.");
+//        }
     }
 }

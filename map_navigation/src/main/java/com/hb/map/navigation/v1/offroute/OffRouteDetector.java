@@ -11,11 +11,12 @@ public class OffRouteDetector extends OffRoute {
 
     @Override
     public boolean isUserOffRoute(Location location, RouteProgress routeProgress, MapboxNavigationOptions options) {
-        // No impl
+        // No implBuilding for iOS Simulator, but the linked and embedded framework 'App.framework' was built for iOS.
         return false;
     }
 
     public boolean isUserOffRouteWith(NavigationStatus status) {
         return status.getRouteState() == RouteState.OFFROUTE;
+//        return false;
     }
 }

@@ -1,11 +1,20 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="NavigationViewLight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="navigationViewMapStyle">
+            https://images.vietbando.com/Style/vt_vbddark/306ec9b5-8146-4a83-9271-bd7b343a574a
+        </item>
     </style>
+
+
+    <style name="MyNavigationDark" parent="NavigationViewDark" />
+
+    <style name="MyNavigationLight" parent="NavigationViewLight" />
 
 </resources>

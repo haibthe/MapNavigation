@@ -16,8 +16,6 @@ import com.hb.map.navigation.v1.milestone.Milestone;
 import com.hb.map.navigation.v1.milestone.MilestoneEventListener;
 import com.hb.map.navigation.v1.milestone.VoiceInstructionMilestone;
 import com.hb.map.navigation.v1.navigation.camera.Camera;
-import com.hb.map.navigation.v1.navigation.camera.SimpleCamera;
-import com.hb.map.navigation.v1.navigation.metrics.FeedbackEvent;
 import com.hb.map.navigation.v1.offroute.OffRoute;
 import com.hb.map.navigation.v1.offroute.OffRouteListener;
 import com.hb.map.navigation.v1.route.FasterRoute;
@@ -39,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import retrofit2.Callback;
 import timber.log.Timber;
 
 import static com.hb.map.navigation.v1.navigation.NavigationConstants.BANNER_INSTRUCTION_MILESTONE_ID;
@@ -66,7 +63,6 @@ public class MapboxNavigation implements ServiceConnection {
     private final String accessToken;
     private NavigationEventDispatcher navigationEventDispatcher;
     private NavigationEngineFactory navigationEngineFactory;
-    private NavigationTelemetry navigationTelemetry = null;
     private NavigationService navigationService;
     private MapboxNavigator mapboxNavigator;
     private DirectionsRoute directionsRoute;
@@ -135,8 +131,10 @@ public class MapboxNavigation implements ServiceConnection {
      * @see MapboxNavigationOptions
      * @since 0.19.0
      */
-    public MapboxNavigation(@NonNull Context context, @NonNull String accessToken,
-                            @NonNull MapboxNavigationOptions options, @NonNull LocationEngine locationEngine) {
+    public MapboxNavigation(@NonNull Context context,
+                            @NonNull String accessToken,
+                            @NonNull MapboxNavigationOptions options,
+                            @NonNull LocationEngine locationEngine) {
         initializeContext(context);
         this.accessToken = accessToken;
         this.options = options;
@@ -145,24 +143,13 @@ public class MapboxNavigation implements ServiceConnection {
     }
 
     // Package private (no modifier) for testing purposes
-    MapboxNavigation(@NonNull Context context, @NonNull String accessToken,
-                     @NonNull MapboxNavigationOptions options, NavigationTelemetry navigationTelemetry,
-                     LocationEngine locationEngine) {
-        initializeContext(context);
-        this.accessToken = accessToken;
-        this.options = options;
-        this.navigationTelemetry = navigationTelemetry;
-        this.locationEngine = locationEngine;
-        initializeForTest();
-    }
-
-    // Package private (no modifier) for testing purposes
-    MapboxNavigation(@NonNull Context context, @NonNull String accessToken, NavigationTelemetry navigationTelemetry,
-                     LocationEngine locationEngine, MapboxNavigator mapboxNavigator) {
+    MapboxNavigation(@NonNull Context context,
+                     @NonNull String accessToken,
+                     LocationEngine locationEngine,
+                     MapboxNavigator mapboxNavigator) {
         initializeContext(context);
         this.accessToken = accessToken;
         this.options = MapboxNavigationOptions.builder().build();
-        this.navigationTelemetry = navigationTelemetry;
         this.locationEngine = locationEngine;
         this.mapboxNavigator = mapboxNavigator;
         initializeForTest();
@@ -245,15 +232,6 @@ public class MapboxNavigation implements ServiceConnection {
         milestones.remove(milestone);
     }
 
-    /**
-     * Remove a specific milestone by passing in the identifier associated with the milestone you'd
-     * like to remove. If the identifier passed in does not match one of the milestones in the list,
-     * a warning will return in the log.
-     *
-     * @param milestoneIdentifier identifier matching one of the milestones
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     public void removeMilestone(int milestoneIdentifier) {
         for (Milestone milestone : milestones) {
             if (milestoneIdentifier == milestone.getIdentifier()) {
@@ -264,62 +242,19 @@ public class MapboxNavigation implements ServiceConnection {
         Timber.w("No milestone found with the specified identifier.");
     }
 
-    /**
-     * Will return the currently set location engine. By default, the LOST location engine that's
-     * created on initialization of this class. If a custom location engine is preferred to be used,
-     * {@link #setLocationEngine(LocationEngine)} is offered which will replace the default.
-     *
-     * @return the location engine which is will or currently is being used during the navigation
-     * session
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
+
     @NonNull
     public LocationEngine getLocationEngine() {
         return locationEngine;
     }
 
-    /**
-     * Navigation needs an instance of location engine in order to acquire user location information
-     * and handle events based off of the current information. By default, a {@link LocationEngine} is
-     * created using {@link LocationEngineProvider#getBestLocationEngine(Context)}.
-     * <p>
-     * In ideal conditions, the Navigation SDK will receive location updates once every second with
-     * mild to high horizontal accuracy. The location update must also contain all information an
-     * Android location object would expect including bearing, speed, timestamp, and
-     * latitude/longitude.
-     * </p>
-     * <p>
-     * This method can be called during an active navigation session.  The active {@link LocationEngine} will be
-     * replaced and the new one (passed via this method) will be activated with the current {@link LocationEngineRequest}.
-     * </p>
-     *
-     * @param locationEngine a {@link LocationEngine} used for the navigation session
-     * @since 0.1.0
-     */
     public void setLocationEngine(@NonNull LocationEngine locationEngine) {
         this.locationEngine = locationEngine;
-        // Setup telemetry with new engine
-        navigationTelemetry.updateLocationEngineNameAndSimulation(locationEngine);
-        // Notify service to get new location engine.
         if (isServiceAvailable()) {
             navigationService.updateLocationEngine(locationEngine);
         }
     }
 
-    /**
-     * This method updates the {@link LocationEngineRequest} that is used with the {@link LocationEngine}.
-     * <p>
-     * If a request is not provided via {@link MapboxNavigation#setLocationEngineRequest(LocationEngineRequest)},
-     * a default will be provided with optimized settings for navigation.
-     * </p>
-     * <p>
-     * This method can be called during an active navigation session.  The active {@link LocationEngineRequest} will be
-     * replaced and the new one (passed via this method) will be activated with the current {@link LocationEngine}.
-     * </p>
-     *
-     * @param locationEngineRequest to be used with the current {@link LocationEngine}
-     */
     public void setLocationEngineRequest(@NonNull LocationEngineRequest locationEngineRequest) {
         this.locationEngineRequest = locationEngineRequest;
 
@@ -328,58 +263,19 @@ public class MapboxNavigation implements ServiceConnection {
         }
     }
 
-    /**
-     * Calling this method begins a new navigation session using the provided directions route. This API is
-     * also intended to be used when a reroute occurs passing in the updated directions route.
-     * <p>
-     * On initial start of the navigation session, the navigation services gets created and bound to
-     * your activity. Unless disabled, a notification will be displayed to the user and will remain
-     * until the service stops running in the background.
-     * </p><p>
-     * The directions route should be acquired by building a {@link NavigationRoute} object and
-     * calling {@link NavigationRoute#getRoute(Callback)} on it. Using navigation route request a
-     * route with the required parameters needed while at the same time, allowing for flexibility in
-     * other parts of the request.
-     * </p>
-     *
-     * @param directionsRoute a {@link DirectionsRoute} that makes up the path your user should
-     *                        traverse along
-     * @since 0.1.0
-     */
+
     public void startNavigation(@NonNull DirectionsRoute directionsRoute) {
         startNavigationWith(directionsRoute, DirectionsRouteType.NEW_ROUTE);
     }
 
-    /**
-     * Calling this method with {@link DirectionsRouteType#NEW_ROUTE} begins a new navigation session using the
-     * provided directions route.  If called with {@link DirectionsRouteType#FRESH_ROUTE}, only leg annotation data
-     * will be update - can be used with {@link RouteRefresh}.
-     *
-     * @param directionsRoute a {@link DirectionsRoute} that makes up the path your user should
-     *                        traverse along
-     * @param routeType       either new or fresh to determine what data navigation should consider
-     * @see MapboxNavigation#startNavigation(DirectionsRoute)
-     */
+
     public void startNavigation(@NonNull DirectionsRoute directionsRoute, @NonNull DirectionsRouteType routeType) {
         startNavigationWith(directionsRoute, routeType);
     }
 
-    /**
-     * Call this when the navigation session needs to end before the user reaches their final
-     * destination.
-     * <p>
-     * Ending the navigation session ends and unbinds the navigation service meaning any milestone,
-     * progress change, or off-route listeners will not be invoked anymore. A call returning false
-     * will occur to {@link NavigationEventListener#onRunning(boolean)} to notify you when the service
-     * ends.
-     * </p>
-     *
-     * @since 0.1.0
-     */
     public void stopNavigation() {
         Timber.d("MapboxNavigation stopNavigation called");
         if (isServiceAvailable()) {
-            navigationTelemetry.stopSession();
             applicationContext.unbindService(this);
             isBound = false;
             navigationService.endNavigation();
@@ -390,398 +286,105 @@ public class MapboxNavigation implements ServiceConnection {
 
     // Listeners
 
-    /**
-     * This adds a new milestone event listener which is invoked when a milestone gets triggered. If
-     * more then one milestone gets triggered on a location update, each milestone event listener will
-     * be invoked for each of those milestones. This is important to consider if you are using voice
-     * instructions since this would cause multiple instructions to be said at once. Ideally the
-     * milestones setup should avoid triggering too close to each other.
-     * <p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     * </p>
-     *
-     * @param milestoneEventListener an implementation of {@code MilestoneEventListener} which hasn't
-     *                               already been added
-     * @see MilestoneEventListener
-     * @since 0.4.0
-     */
+
     public void addMilestoneEventListener(@NonNull MilestoneEventListener milestoneEventListener) {
         navigationEventDispatcher.addMilestoneEventListener(milestoneEventListener);
     }
 
-    /**
-     * This removes a specific milestone event listener by passing in the instance of it or you can
-     * pass in null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     * </p>
-     *
-     * @param milestoneEventListener an implementation of {@code MilestoneEventListener} which
-     *                               currently exist in the milestoneEventListener list
-     * @see MilestoneEventListener
-     * @since 0.4.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     public void removeMilestoneEventListener(@Nullable MilestoneEventListener milestoneEventListener) {
         navigationEventDispatcher.removeMilestoneEventListener(milestoneEventListener);
     }
 
-    /**
-     * This adds a new progress change listener which is invoked when a location change occurs and the
-     * navigation engine successfully runs it's calculations on it.
-     * <p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     * </p>
-     *
-     * @param progressChangeListener an implementation of {@code ProgressChangeListener} which hasn't
-     *                               already been added
-     * @see ProgressChangeListener
-     * @since 0.1.0
-     */
+
     public void addProgressChangeListener(@NonNull ProgressChangeListener progressChangeListener) {
         navigationEventDispatcher.addProgressChangeListener(progressChangeListener);
     }
 
-    /**
-     * This removes a specific progress change listener by passing in the instance of it or you can
-     * pass in null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     * </p>
-     *
-     * @param progressChangeListener an implementation of {@code ProgressChangeListener} which
-     *                               currently exist in the progressChangeListener list
-     * @see ProgressChangeListener
-     * @since 0.1.0
-     */
+
     public void removeProgressChangeListener(@Nullable ProgressChangeListener progressChangeListener) {
         navigationEventDispatcher.removeProgressChangeListener(progressChangeListener);
     }
 
-    /**
-     * This adds a new off route listener which is invoked when the devices location veers off the
-     * route and the specified criteria's in {@link MapboxNavigationOptions} have been met.
-     * <p>
-     * The behavior that causes this listeners callback to get invoked vary depending on whether a
-     * custom off route engine has been set using {@link #setOffRouteEngine(OffRoute)}.
-     * </p><p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     * </p>
-     *
-     * @param offRouteListener an implementation of {@code OffRouteListener} which hasn't already been
-     *                         added
-     * @see OffRouteListener
-     * @since 0.2.0
-     */
+
     public void addOffRouteListener(@NonNull OffRouteListener offRouteListener) {
         navigationEventDispatcher.addOffRouteListener(offRouteListener);
     }
 
-    /**
-     * This removes a specific off route listener by passing in the instance of it or you can pass in
-     * null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     * </p>
-     *
-     * @param offRouteListener an implementation of {@code OffRouteListener} which currently exist in
-     *                         the offRouteListener list
-     * @see OffRouteListener
-     * @since 0.2.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     public void removeOffRouteListener(@Nullable OffRouteListener offRouteListener) {
         navigationEventDispatcher.removeOffRouteListener(offRouteListener);
     }
 
-    /**
-     * This adds a new navigation event listener which is invoked when navigation service begins
-     * running in the background and again when the service gets destroyed.
-     * <p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     * </p>
-     *
-     * @param navigationEventListener an implementation of {@code NavigationEventListener} which
-     *                                hasn't already been added
-     * @see NavigationEventListener
-     * @since 0.1.0
-     */
+
     public void addNavigationEventListener(@NonNull NavigationEventListener navigationEventListener) {
         navigationEventDispatcher.addNavigationEventListener(navigationEventListener);
     }
 
-    /**
-     * This removes a specific navigation event listener by passing in the instance of it or you can
-     * pass in null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     * </p>
-     *
-     * @param navigationEventListener an implementation of {@code NavigationEventListener} which
-     *                                currently exist in the navigationEventListener list
-     * @see NavigationEventListener
-     * @since 0.1.0
-     */
+
     public void removeNavigationEventListener(@Nullable NavigationEventListener navigationEventListener) {
         navigationEventDispatcher.removeNavigationEventListener(navigationEventListener);
     }
 
-    /**
-     * This adds a new faster route listener which is invoked when a new, faster {@link DirectionsRoute}
-     * has been retrieved by the specified criteria in {@link FasterRoute}.
-     * <p>
-     * The behavior that causes this listeners callback to get invoked vary depending on whether a
-     * custom faster route engine has been set using {@link #setFasterRouteEngine(FasterRoute)}.
-     * </p><p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     * </p>
-     *
-     * @param fasterRouteListener an implementation of {@code FasterRouteListener}
-     * @see FasterRouteListener
-     * @since 0.9.0
-     */
     public void addFasterRouteListener(@NonNull FasterRouteListener fasterRouteListener) {
         navigationEventDispatcher.addFasterRouteListener(fasterRouteListener);
     }
 
-    /**
-     * This removes a specific faster route listener by passing in the instance of it or you can pass in
-     * null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     * </p>
-     *
-     * @param fasterRouteListener an implementation of {@code FasterRouteListener} which currently exist in
-     *                            the fasterRouteListeners list
-     * @see FasterRouteListener
-     * @since 0.9.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     public void removeFasterRouteListener(@Nullable FasterRouteListener fasterRouteListener) {
         navigationEventDispatcher.removeFasterRouteListener(fasterRouteListener);
     }
 
-    /**
-     * This adds a new raw location listener which is invoked when a new {@link android.location.Location}
-     * has been pushed by the {@link LocationEngine}.
-     * <p>
-     * It is not possible to add the same listener implementation more then once and a warning will be
-     * printed in the log if attempted.
-     *
-     * @param rawLocationListener an implementation of {@code RawLocationListener}
-     */
     public void addRawLocationListener(@NonNull RawLocationListener rawLocationListener) {
         navigationEventDispatcher.addRawLocationListener(rawLocationListener);
     }
 
-    /**
-     * This removes a specific raw location listener by passing in the instance of it or you can pass in
-     * null to remove all the listeners. When {@link #onDestroy()} is called, all listeners
-     * get removed automatically, removing the requirement for developers to manually handle this.
-     * <p>
-     * If the listener you are trying to remove does not exist in the list, a warning will be printed
-     * in the log.
-     *
-     * @param rawLocationListener an implementation of {@code RawLocationListener}
-     */
+
     public void removeRawLocationListener(@Nullable RawLocationListener rawLocationListener) {
         navigationEventDispatcher.removeRawLocationListener(rawLocationListener);
     }
 
     // Custom engines
 
-    /**
-     * Returns the current camera engine used to configure the camera position while routing. By default,
-     * a {@link SimpleCamera} is used.
-     *
-     * @return camera engine used to configure camera position while routing
-     * @since 0.10.0
-     */
+
     @NonNull
     public Camera getCameraEngine() {
         return navigationEngineFactory.retrieveCameraEngine();
     }
 
-    /**
-     * Navigation uses a camera engine to determine the camera position while routing.
-     * By default, it uses a {@link SimpleCamera}. If you would like to customize how the camera is
-     * positioned, create a new {@link Camera} and set it here.
-     *
-     * @param cameraEngine camera engine used to configure camera position while routing
-     * @since 0.10.0
-     */
+
     public void setCameraEngine(@NonNull Camera cameraEngine) {
         navigationEngineFactory.updateCameraEngine(cameraEngine);
     }
 
-    /**
-     * This will return the currently set snap engine which will or is being used during the
-     * navigation session. If no snap engine has been set yet, the default engine will be returned.
-     *
-     * @return the snap engine currently set and will/is being used for the navigation session
-     * @see Snap
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
+
     public Snap getSnapEngine() {
         return navigationEngineFactory.retrieveSnapEngine();
     }
 
-    /**
-     * This API is used to pass in a custom implementation of the snapping logic, A default
-     * snap-to-route engine is attached when this class is first initialized; setting a custom one
-     * will replace it with your own implementation.
-     * <p>
-     * In general, snap logic can be anything that modifies the device's true location. For more
-     * information see the implementation notes in {@link Snap}.
-     * </p><p>
-     * The engine can be changed at anytime, even during a navigation session.
-     * </p>
-     *
-     * @param snapEngine a custom implementation of the {@code Snap} class
-     * @see Snap
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     public void setSnapEngine(@NonNull Snap snapEngine) {
         navigationEngineFactory.updateSnapEngine(snapEngine);
     }
 
-    /**
-     * This will return the currently set off-route engine which will or is being used during the
-     * navigation session. If no off-route engine has been set yet, the default engine will be
-     * returned.
-     *
-     * @return the off-route engine currently set and will/is being used for the navigation session
-     * @see OffRoute
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
+
     @NonNull
     public OffRoute getOffRouteEngine() {
         return navigationEngineFactory.retrieveOffRouteEngine();
     }
 
-    /**
-     * This API is used to pass in a custom implementation of the off-route logic, A default
-     * off-route detection engine is attached when this class is first initialized; setting a custom
-     * one will replace it with your own implementation.
-     * <p>
-     * The engine can be changed at anytime, even during a navigation session.
-     * </p>
-     *
-     * @param offRouteEngine a custom implementation of the {@code OffRoute} class
-     * @see OffRoute
-     * @since 0.5.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
+
     public void setOffRouteEngine(@NonNull OffRoute offRouteEngine) {
         navigationEngineFactory.updateOffRouteEngine(offRouteEngine);
     }
 
-    /**
-     * This will return the currently set faster-route engine which will or is being used during the
-     * navigation session. If no faster-route engine has been set yet, the default engine will be
-     * returned.
-     *
-     * @return the faster-route engine currently set and will/is being used for the navigation session
-     * @see FasterRoute
-     * @since 0.9.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
     @NonNull
     public FasterRoute getFasterRouteEngine() {
         return navigationEngineFactory.retrieveFasterRouteEngine();
     }
 
-    /**
-     * This API is used to pass in a custom implementation of the faster-route detection logic, A default
-     * faster-route detection engine is attached when this class is first initialized; setting a custom
-     * one will replace it with your own implementation.
-     * <p>
-     * The engine can be changed at anytime, even during a navigation session.
-     * </p>
-     *
-     * @param fasterRouteEngine a custom implementation of the {@link FasterRoute} class
-     * @see FasterRoute
-     * @since 0.9.0
-     */
-    @SuppressWarnings("WeakerAccess") // Public exposed for usage outside SDK
+
     public void setFasterRouteEngine(@NonNull FasterRoute fasterRouteEngine) {
         navigationEngineFactory.updateFasterRouteEngine(fasterRouteEngine);
     }
 
-    /**
-     * Creates a new {@link FeedbackEvent} with a given type, description, and source.
-     * <p>
-     * Returns a {@link String} feedbackId that can be used to update or cancel this feedback event.
-     * There is a 20 second time period set after this method is called to do so.
-     *
-     * @param feedbackType from list of set feedback types
-     * @param description  an option description to provide more detail about the feedback
-     * @param source       either from the drop-in UI or a reroute
-     * @return String feedbackId
-     * @since 0.7.0
-     */
-    public String recordFeedback(@FeedbackEvent.FeedbackType String feedbackType,
-                                 String description, @FeedbackEvent.FeedbackSource String source) {
-        return navigationTelemetry.recordFeedbackEvent(feedbackType, description, source);
-    }
 
-    /**
-     * Updates an existing feedback event generated by {@link MapboxNavigation#recordFeedback(String, String, String)}.
-     * <p>
-     * Uses a feedback ID to find the correct event and then adjusts the feedbackType and description.
-     *
-     * @param feedbackId   generated from {@link MapboxNavigation#recordFeedback(String, String, String)}
-     * @param feedbackType from list of set feedback types
-     * @param description  an optional description to provide more detail about the feedback
-     * @param screenshot   an optional encoded screenshot to provide more detail about the feedback
-     * @since 0.8.0
-     */
-    public void updateFeedback(String feedbackId, @FeedbackEvent.FeedbackType String feedbackType,
-                               String description, String screenshot) {
-        navigationTelemetry.updateFeedbackEvent(feedbackId, feedbackType, description, screenshot);
-    }
-
-    /**
-     * Cancels an existing feedback event generated by {@link MapboxNavigation#recordFeedback(String, String, String)}.
-     * <p>
-     * Uses a feedback ID to find the correct event and then cancels it (will no longer be recorded).
-     *
-     * @param feedbackId generated from {@link MapboxNavigation#recordFeedback(String, String, String)}
-     * @since 0.7.0
-     */
-    public void cancelFeedback(String feedbackId) {
-        navigationTelemetry.cancelFeedback(feedbackId);
-    }
-
-    /**
-     * Use this method to update the leg index of the current {@link DirectionsRoute}
-     * being traveled along.
-     * <p>
-     * An index passed here that is not valid will be ignored.  Please note, the leg index
-     * will automatically increment by default.  To disable this,
-     * use {@link MapboxNavigationOptions#enableAutoIncrementLegIndex()}.
-     *
-     * @param legIndex to be set
-     * @return true if leg index updated, false otherwise
-     */
     public boolean updateRouteLegIndex(int legIndex) {
         if (checkInvalidLegIndex(legIndex)) {
             return false;
@@ -866,7 +469,6 @@ public class MapboxNavigation implements ServiceConnection {
         navigationEngineFactory = new NavigationEngineFactory();
         locationEngine = obtainLocationEngine();
         locationEngineRequest = obtainLocationEngineRequest();
-        initializeTelemetry();
 
         // Create and add default milestones if enabled.
         milestones = new HashSet<>();
@@ -889,7 +491,6 @@ public class MapboxNavigation implements ServiceConnection {
         navigationEngineFactory = new NavigationEngineFactory();
         locationEngine = obtainLocationEngine();
         locationEngineRequest = obtainLocationEngineRequest();
-        initializeTelemetry();
 
         // Create and add default milestones if enabled.
         milestones = new HashSet<>();
@@ -915,18 +516,6 @@ public class MapboxNavigation implements ServiceConnection {
         navigatorConfig.setIntersectionRadiusForOffRouteDetection(options.intersectionRadiusForOffRouteDetection());
         navigator.setConfig(navigatorConfig);
         return navigator;
-    }
-
-    private void initializeTelemetry() {
-        navigationTelemetry = obtainTelemetry();
-        navigationTelemetry.initialize(applicationContext, accessToken, this);
-    }
-
-    private NavigationTelemetry obtainTelemetry() {
-        if (navigationTelemetry == null) {
-            return NavigationTelemetry.getInstance();
-        }
-        return navigationTelemetry;
     }
 
     @NonNull
@@ -956,11 +545,8 @@ public class MapboxNavigation implements ServiceConnection {
         routeRefresher = new RouteRefresher(this, new RouteRefresh(accessToken));
         mapboxNavigator.updateRoute(directionsRoute, routeType);
         if (!isBound) {
-            navigationTelemetry.startSession(directionsRoute, locationEngine);
             startNavigationService();
             navigationEventDispatcher.onNavigationEvent(true);
-        } else {
-            navigationTelemetry.updateSessionRoute(directionsRoute);
         }
     }
 

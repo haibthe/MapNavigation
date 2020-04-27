@@ -49,13 +49,15 @@
     <string name="dropoff_dialog_negative_text">Hủy bỏ</string>
 
     <!-- Should not be translated -->
-    <string name="navigation_guidance_day"
-        translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>
-    <string name="navigation_guidance_night"
-        translatable="false">mapbox://styles/mapbox/navigation-guidance-night-v4</string>
-    <string name="navigation_view_instance_state"
-        translatable="false">navigation_view_instance_state</string>
-    <string name="navigation_running"
-        translatable="false">navigation_running</string>
+<!--    <string name="navigation_guidance_day" translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>-->
+<!--    <string name="navigation_guidance_night" translatable="false">mapbox://styles/mapbox/navigation-guidance-night-v4</string>-->
+
+    <string name="navigation_guidance_day" translatable="false">https://raw.githubusercontent.com/haibthe/OpenData/master/map_default_style.json</string>
+    <string name="navigation_guidance_night" translatable="false">https://raw.githubusercontent.com/haibthe/OpenData/master/map_dark_style.json</string>
+
+<!--    https://images.vietbando.com-->
+<!--    https://images.vietbando.com-->
+    <string name="navigation_view_instance_state" translatable="false">navigation_view_instance_state</string>
+    <string name="navigation_running" translatable="false">navigation_running</string>
 
 </resources>

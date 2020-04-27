@@ -1,0 +1,78 @@
+{
+  "status": 200,
+  "message": "Ok",
+  "via_points": [
+    [
+      10.789965,
+      106.691777
+    ],
+    [
+      10.774447,
+      106.677222
+    ]
+  ],
+  "routes": [
+    {
+      "via_distances": [
+        0,
+        2684
+      ],
+      "via_durations": [
+        0,
+        354
+      ],
+      "via_indices": [
+        0,
+        89
+      ],
+      "geometry": "ycqqSak}njEhLbJlA`AdItGlRjOrZdVvLsP~JcN|MyQfPaTjW~VlU|TnDjDfEdEdH|GjHdHdCbChGlGtHhH|WnWh[t[jZbZ`YdYvE~DhNhN`TtSfc@xb@|d@ld@~JxJx]n]zLvL~@`Al]~\\diAlhAljAjiA`LzKrJpJlFjF~YtYbCbKw@Fu@Ls@Pq@Vo@\\k@^g@d@e@h@a@j@[n@Wp@Qt@Mt@Gv@Cv@Bv@Ft@Jt@Pt@Vp@Zn@`@l@b@h@h@d@j@^n@\\p@Vr@Pt@Lt@Fv@Bt@A~IdI`ExCfxBfcAtQdJfJrHtCfEhRp]~HxOjSl_@vUpb@yEtCiIxEoCjB]vAsBvAeD|DuBnF??",
+      "steps": {
+        "turns": [
+          10,
+          7,
+          3,
+          11,
+          12,
+          3,
+          15
+        ],
+        "names": [
+          "Đường Đinh Công Tráng",
+          "Đường Hai Bà Trưng",
+          "Đường Võ Thị Sáu",
+          "Vòng Xoay Công Trường Dân Chủ",
+          "Đường Ba Tháng Hai",
+          "Đường Cao Thắng",
+          ""
+        ],
+        "indices": [
+          0,
+          5,
+          9,
+          39,
+          71,
+          81,
+          89
+        ],
+        "distances": [
+          169,
+          163,
+          1561,
+          97,
+          605,
+          89,
+          0
+        ],
+        "durations": [
+          31,
+          27,
+          181,
+          31,
+          74,
+          11,
+          0
+        ]
+      }
+    }
+  ]
+}

@@ -46,7 +46,6 @@ class LocationUpdater {
         if (location != null) {
             thread.updateLocation(location);
             dispatcher.onLocationUpdate(location);
-            NavigationTelemetry.getInstance().updateLocation(location);
         }
     }
 

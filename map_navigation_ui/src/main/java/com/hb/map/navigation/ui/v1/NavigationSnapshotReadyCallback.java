@@ -40,7 +40,6 @@ public class NavigationSnapshotReadyCallback implements MapboxMap.SnapshotReadyC
         mapView.setVisibility(View.INVISIBLE);
         Bitmap capture = ViewUtils.captureView(mapView);
         String encoded = ViewUtils.encodeView(capture);
-        navigationViewModel.updateFeedbackScreenshot(encoded);
     }
 
     private void resetViewVisibility(ImageView screenshotView) {

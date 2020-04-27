@@ -31,15 +31,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
-import com.hb.map.navigation.ui.v1.FeedbackButton;
 import com.hb.map.navigation.ui.v1.NavigationButton;
 import com.hb.map.navigation.ui.v1.NavigationViewModel;
 import com.hb.map.navigation.ui.v1.R;
 import com.hb.map.navigation.ui.v1.SoundButton;
 import com.hb.map.navigation.ui.v1.ThemeSwitcher;
-import com.hb.map.navigation.ui.v1.feedback.FeedbackBottomSheet;
-import com.hb.map.navigation.ui.v1.feedback.FeedbackBottomSheetListener;
-import com.hb.map.navigation.ui.v1.feedback.FeedbackItem;
 import com.hb.map.navigation.ui.v1.instruction.maneuver.ManeuverView;
 import com.hb.map.navigation.ui.v1.instruction.turnlane.TurnLaneAdapter;
 import com.hb.map.navigation.ui.v1.listeners.InstructionListListener;
@@ -47,7 +43,6 @@ import com.hb.map.navigation.ui.v1.summary.list.InstructionListAdapter;
 import com.hb.map.navigation.v1.milestone.BannerInstructionMilestone;
 import com.hb.map.navigation.v1.milestone.Milestone;
 import com.hb.map.navigation.v1.navigation.NavigationConstants;
-import com.hb.map.navigation.v1.navigation.metrics.FeedbackEvent;
 import com.hb.map.navigation.v1.offroute.OffRouteListener;
 import com.hb.map.navigation.v1.routeprogress.ProgressChangeListener;
 import com.hb.map.navigation.v1.routeprogress.RouteProgress;
@@ -75,7 +70,7 @@ import timber.log.Timber;
  *
  * @since 0.6.0
  */
-public class InstructionView extends RelativeLayout implements LifecycleObserver, FeedbackBottomSheetListener {
+public class InstructionView extends RelativeLayout implements LifecycleObserver {
 
     private static final String COMPONENT_TYPE_LANE = "lane";
 
@@ -105,7 +100,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
     private DistanceFormatter distanceFormatter;
     private boolean isRerouting;
     private SoundButton soundButton;
-    private FeedbackButton feedbackButton;
     private LifecycleOwner lifecycleOwner;
 
     public InstructionView(Context context) {
@@ -152,24 +146,12 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        addBottomSheetListener();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         cancelDelayedTransition();
-    }
-
-    @Override
-    public void onFeedbackSelected(FeedbackItem feedbackItem) {
-        navigationViewModel.updateFeedback(feedbackItem);
-        alertView.showFeedbackSubmitted();
-    }
-
-    @Override
-    public void onFeedbackDismissed() {
-        navigationViewModel.cancelFeedback();
     }
 
     /**
@@ -207,7 +189,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
                         showRerouteState();
                     } else if (isRerouting) {
                         hideRerouteState();
-                        alertView.showReportProblem();
                     }
                     isRerouting = isOffRoute;
                 }
@@ -272,19 +253,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
             updateSubStep(instructions.sub(), primaryManeuverModifier);
         }
     }
-
-    /**
-     * Shows {@link FeedbackBottomSheet} and adds a listener so
-     * the proper feedback information is collected or the user dismisses the UI.
-     */
-    public void showFeedbackBottomSheet() {
-        FragmentManager fragmentManager = obtainSupportFragmentManager();
-        if (fragmentManager != null) {
-            long duration = NavigationConstants.FEEDBACK_BOTTOM_SHEET_DURATION;
-            FeedbackBottomSheet.newInstance(this, duration).show(fragmentManager, FeedbackBottomSheet.TAG);
-        }
-    }
-
 
     /**
      * Will slide the reroute view down from the top of the screen
@@ -393,9 +361,9 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
      *
      * @return feedback button with {@link NavigationButton} API
      */
-    public NavigationButton retrieveFeedbackButton() {
-        return feedbackButton;
-    }
+//    public NavigationButton retrieveFeedbackButton() {
+//        return feedbackButton;
+//    }
 
     /**
      * Returns the {@link NavigationAlertView} that is shown during off-route events with
@@ -439,7 +407,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
         instructionListLayout = findViewById(R.id.instructionListLayout);
         rvInstructions = findViewById(R.id.rvInstructions);
         soundButton = findViewById(R.id.soundLayout);
-        feedbackButton = findViewById(R.id.feedbackLayout);
     }
 
     /**
@@ -506,29 +473,11 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
         }
     }
 
-    private void addBottomSheetListener() {
-        FragmentManager fragmentManager = obtainSupportFragmentManager();
-        if (fragmentManager != null) {
-            String tag = FeedbackBottomSheet.TAG;
-            FeedbackBottomSheet feedbackBottomSheet = (FeedbackBottomSheet) fragmentManager.findFragmentByTag(tag);
-            if (feedbackBottomSheet != null) {
-                feedbackBottomSheet.setFeedbackBottomSheetListener(this);
-            }
-        }
-    }
-
     private void subscribeAlertView() {
         alertView.subscribe(navigationViewModel);
     }
 
     private void initializeButtonListeners() {
-        feedbackButton.addOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigationViewModel.recordFeedback(FeedbackEvent.FEEDBACK_SOURCE_UI);
-                showFeedbackBottomSheet();
-            }
-        });
         soundButton.addOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -538,7 +487,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
     }
 
     private void showButtons() {
-        feedbackButton.show();
         soundButton.show();
     }
 
@@ -551,7 +499,6 @@ public class InstructionView extends RelativeLayout implements LifecycleObserver
     }
 
     private void initializeButtons() {
-        feedbackButton.hide();
         soundButton.hide();
     }
 

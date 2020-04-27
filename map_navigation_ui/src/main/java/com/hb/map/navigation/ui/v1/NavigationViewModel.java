@@ -3,7 +3,6 @@ package com.hb.map.navigation.ui.v1;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +10,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hb.map.navigation.ui.v1.camera.DynamicCamera;
-import com.hb.map.navigation.ui.v1.feedback.FeedbackItem;
 import com.hb.map.navigation.ui.v1.instruction.BannerInstructionModel;
 import com.hb.map.navigation.ui.v1.instruction.InstructionModel;
 import com.hb.map.navigation.ui.v1.summary.SummaryModel;
@@ -29,7 +27,6 @@ import com.hb.map.navigation.v1.navigation.MapboxNavigationOptions;
 import com.hb.map.navigation.v1.navigation.NavigationEventListener;
 import com.hb.map.navigation.v1.navigation.NavigationTimeFormat;
 import com.hb.map.navigation.v1.navigation.camera.Camera;
-import com.hb.map.navigation.v1.navigation.metrics.FeedbackEvent;
 import com.hb.map.navigation.v1.offroute.OffRouteListener;
 import com.hb.map.navigation.v1.route.FasterRouteListener;
 import com.hb.map.navigation.v1.route.RouteFetcher;
@@ -64,7 +61,6 @@ public class NavigationViewModel extends AndroidViewModel {
     public final MutableLiveData<Boolean> isOffRoute = new MutableLiveData<>();
     private final MutableLiveData<Location> navigationLocation = new MutableLiveData<>();
     private final MutableLiveData<DirectionsRoute> route = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> shouldRecordScreenshot = new MutableLiveData<>();
     private final MutableLiveData<Point> destination = new MutableLiveData<>();
 
     private MapboxNavigation navigation;
@@ -76,8 +72,6 @@ public class NavigationViewModel extends AndroidViewModel {
     private VoiceInstructionCache voiceInstructionCache;
     private int voiceInstructionsToAnnounce = 0;
     private RouteProgress routeProgress;
-    private String feedbackId;
-    private String screenshot;
     private String language;
     private RouteUtils routeUtils;
     private LocaleUtils localeUtils;
@@ -174,46 +168,6 @@ public class NavigationViewModel extends AndroidViewModel {
     }
 
     /**
-     * Records a general feedback item with source
-     */
-    public void recordFeedback(@FeedbackEvent.FeedbackSource String feedbackSource) {
-        feedbackId = navigation.recordFeedback(FeedbackEvent.FEEDBACK_TYPE_GENERAL_ISSUE, EMPTY_STRING, feedbackSource);
-        shouldRecordScreenshot.setValue(true);
-    }
-
-    /**
-     * Used to update an existing {@link FeedbackItem}
-     * with a feedback type and description.
-     * <p>
-     * Uses cached feedbackId to ensure the proper item is updated.
-     *
-     * @param feedbackItem item to be updated
-     * @since 0.7.0
-     */
-    public void updateFeedback(FeedbackItem feedbackItem) {
-        if (!TextUtils.isEmpty(feedbackId)) {
-            navigation.updateFeedback(feedbackId, feedbackItem.getFeedbackType(), feedbackItem.getDescription(), screenshot);
-            sendEventFeedback(feedbackItem);
-            feedbackId = null;
-            screenshot = null;
-        }
-    }
-
-    /**
-     * Used to cancel an existing {@link FeedbackItem}.
-     * <p>
-     * Uses cached feedbackId to ensure the proper item is cancelled.
-     *
-     * @since 0.7.0
-     */
-    public void cancelFeedback() {
-        if (!TextUtils.isEmpty(feedbackId)) {
-            navigation.cancelFeedback(feedbackId);
-            feedbackId = null;
-        }
-    }
-
-    /**
      * Returns the current instance of {@link MapboxNavigation}.
      * <p>
      * Will be null if navigation has not been initialized.
@@ -249,13 +203,6 @@ public class NavigationViewModel extends AndroidViewModel {
             initializeMapOfflineManager(options);
         }
         router.extractRouteOptions(options);
-    }
-
-    void updateFeedbackScreenshot(String screenshot) {
-        if (!TextUtils.isEmpty(feedbackId)) {
-            this.screenshot = screenshot;
-        }
-        shouldRecordScreenshot.setValue(false);
     }
 
     boolean isRunning() {
@@ -326,10 +273,6 @@ public class NavigationViewModel extends AndroidViewModel {
 
     MutableLiveData<Point> retrieveDestination() {
         return destination;
-    }
-
-    MutableLiveData<Boolean> retrieveShouldRecordScreenshot() {
-        return shouldRecordScreenshot;
     }
 
     private void initializeRouter() {
@@ -515,12 +458,6 @@ public class NavigationViewModel extends AndroidViewModel {
                 BannerInstructionModel model = new BannerInstructionModel(distanceFormatter, routeProgress, instructions);
                 bannerInstructionModel.setValue(model);
             }
-        }
-    }
-
-    private void sendEventFeedback(FeedbackItem feedbackItem) {
-        if (navigationViewEventDispatcher != null) {
-            navigationViewEventDispatcher.onFeedbackSent(feedbackItem);
         }
     }
 

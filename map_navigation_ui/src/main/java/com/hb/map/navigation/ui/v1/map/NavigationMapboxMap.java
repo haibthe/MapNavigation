@@ -41,14 +41,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static com.hb.map.navigation.ui.v1.map.NavigationSymbolManager.MAPBOX_NAVIGATION_MARKER_NAME;
 import static com.hb.map.navigation.v1.navigation.NavigationConstants.NAVIGATION_MINIMUM_MAP_ZOOM;
 
-/**
- * Wrapper class for {@link MapboxMap}.
- * <p>
- * This class initializes various map-related components and plugins that are
- * useful for providing a navigation-driven map experience.
- * <p>
- * These APIs include drawing a route line, camera animations, and more.
- */
 public class NavigationMapboxMap {
 
     static final String STREETS_LAYER_ID = "streetsLayer";
@@ -80,13 +72,7 @@ public class NavigationMapboxMap {
     private MapFpsDelegate mapFpsDelegate;
     private LocationFpsDelegate locationFpsDelegate;
 
-    /**
-     * Constructor that can be used once {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback}
-     * has been called via {@link MapView#getMapAsync(OnMapReadyCallback)}.
-     *
-     * @param mapView   for map size and Context
-     * @param mapboxMap for APIs to interact with the map
-     */
+
     public NavigationMapboxMap(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
         this.mapView = mapView;
         this.mapboxMap = mapboxMap;
@@ -142,78 +128,30 @@ public class NavigationMapboxMap {
         initializeWayName(mapboxMap, adjustor);
     }
 
-    /**
-     * Adds a marker icon on the map at the given position.
-     * <p>
-     * The icon used for this method can be defined in your theme with
-     * the attribute <tt>navigationViewDestinationMarker</tt>.
-     *
-     * @param context  to retrieve the icon drawable from the theme
-     * @param position the point at which the marker will be placed
-     * @deprecated Use {@link NavigationMapboxMap#addDestinationMarker(Point)} instead.
-     * A {@link Context} is no longer needed.
-     */
     @Deprecated
     public void addMarker(Context context, Point position) {
         navigationSymbolManager.addDestinationMarkerFor(position);
     }
 
-    /**
-     * Adds a marker icon on the map at the given position.
-     * <p>
-     * The icon used for this method can be defined in your theme with
-     * the attribute <tt>navigationViewDestinationMarker</tt>.
-     *
-     * @param position the point at which the marker will be placed
-     */
     public void addDestinationMarker(Point position) {
         navigationSymbolManager.addDestinationMarkerFor(position);
     }
 
-    /**
-     * Adds a custom marker to the map based on the options provided.
-     * <p>
-     * Please note, the map will manage all markers added.  Calling {@link NavigationMapboxMap#clearMarkers()}
-     * will clear all destination / custom markers that have been added to the map.
-     *
-     * @param options for the custom {@link com.mapbox.mapboxsdk.plugins.annotation.Symbol}
-     */
     public void addCustomMarker(SymbolOptions options) {
         navigationSymbolManager.addCustomSymbolFor(options);
     }
 
-    /**
-     * Clears all markers on the map that have been added by this class.
-     * <p>
-     * This will not clear all markers from the map entirely.  Does nothing
-     * if no markers have been added.
-     */
     public void clearMarkers() {
         navigationSymbolManager.removeAllMarkerSymbols();
     }
 
-    /**
-     * Updates the location icon on the map and way name data (if found)
-     * for the given {@link Location}.
-     *
-     * @param location to update the icon and query the map
-     */
+
     public void updateLocation(Location location) {
         locationComponent.forceLocationUpdate(location);
         updateMapWayNameWithLocation(location);
     }
 
-    /**
-     * The maximum preferred frames per second at which to render the map.
-     * <p>
-     * This property only takes effect when the application has limited resources, such as when
-     * the device is running on battery power. By default, this is set to 20fps.
-     * <p>
-     * Throttling will also only take effect when the camera is currently tracking
-     * the user location.
-     *
-     * @param maxFpsThreshold to be used to limit map frames per second
-     */
+
     public void updateMapFpsThrottle(int maxFpsThreshold) {
         if (mapFpsDelegate != null) {
             mapFpsDelegate.updateMaxFpsThreshold(maxFpsThreshold);
@@ -222,15 +160,7 @@ public class NavigationMapboxMap {
         }
     }
 
-    /**
-     * Enabled by default, the navigation map will throttle frames per second when the application has
-     * limited resources, such as when the device is running on battery power.
-     * <p>
-     * Throttling will also only take effect when the camera is currently tracking
-     * the user location.
-     *
-     * @param isEnabled true to enable (default), false to render at device ability
-     */
+
     public void updateMapFpsThrottleEnabled(boolean isEnabled) {
         if (mapFpsDelegate != null) {
             mapFpsDelegate.updateEnabled(isEnabled);
@@ -239,12 +169,6 @@ public class NavigationMapboxMap {
         }
     }
 
-    /**
-     * Enabled by default, the navigation map will throttle frames per second of the location icon
-     * based on the map zoom level.
-     *
-     * @param isEnabled true to enable (default), false to render at device ability
-     */
     public void updateLocationFpsThrottleEnabled(boolean isEnabled) {
         locationFpsDelegate.updateEnabled(isEnabled);
     }

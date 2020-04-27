@@ -19,6 +19,8 @@ import com.mapbox.geojson.Point;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 class NavigationViewRouter implements RouteListener {
 
     private final RouteFetcher onlineRouter;

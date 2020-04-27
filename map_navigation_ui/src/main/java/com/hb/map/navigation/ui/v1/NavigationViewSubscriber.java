@@ -40,14 +40,6 @@ class NavigationViewSubscriber implements LifecycleObserver {
             }
         });
 
-        navigationViewModel.retrieveShouldRecordScreenshot().observe(lifecycleOwner, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean shouldRecordScreenshot) {
-                if (shouldRecordScreenshot != null && shouldRecordScreenshot) {
-                    navigationPresenter.onShouldRecordScreenshot();
-                }
-            }
-        });
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -55,6 +47,5 @@ class NavigationViewSubscriber implements LifecycleObserver {
         navigationViewModel.retrieveRoute().removeObservers(lifecycleOwner);
         navigationViewModel.retrieveDestination().removeObservers(lifecycleOwner);
         navigationViewModel.retrieveNavigationLocation().removeObservers(lifecycleOwner);
-        navigationViewModel.retrieveShouldRecordScreenshot().removeObservers(lifecycleOwner);
     }
 }

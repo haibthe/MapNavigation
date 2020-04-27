@@ -44,16 +44,25 @@ public class RouteFetcher {
     private NavigationRoute navigationRoute;
     private RouteProgress routeProgress;
     private RouteUtils routeUtils;
-    private Callback<DirectionsResponse> directionsResponseCallback = new Callback<DirectionsResponse>() {
+    private NavigationRoute.ICallback directionsResponseCallback = new NavigationRoute.ICallback() {
         @Override
-        public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
-            updateListeners(response.body(), routeProgress);
+        public void onResponse(DirectionsResponse response) {
+            updateListeners(response, routeProgress);
         }
 
         @Override
-        public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable throwable) {
-            updateListenersWithError(throwable);
+        public void onFailure(Throwable t) {
+            updateListenersWithError(t);
         }
+        //        @Override
+//        public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
+//            updateListeners(response.body(), routeProgress);
+//        }
+//
+//        @Override
+//        public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable throwable) {
+//            updateListenersWithError(throwable);
+//        }
     };
 
     public RouteFetcher(Context context, String accessToken) {
@@ -132,10 +141,10 @@ public class RouteFetcher {
         Point origin = Point.fromLngLat(location.getLongitude(), location.getLatitude());
         Double bearing = location.hasBearing() ? Float.valueOf(location.getBearing()).doubleValue() : null;
         RouteOptions options = routeProgress.directionsRoute().routeOptions();
-        NavigationRoute.Builder builder = NavigationRoute.builder(context)
-                .accessToken(accessToken)
-                .origin(origin, bearing, BEARING_TOLERANCE)
-                .routeOptions(options);
+        NavigationRoute.Builder builder = NavigationRoute.builder()
+//                .accessToken(accessToken)
+                .origin(origin, bearing, BEARING_TOLERANCE);
+//                .routeOptions(options);
 
         List<Point> remainingWaypoints = routeUtils.calculateRemainingWaypoints(routeProgress);
         if (remainingWaypoints == null) {
@@ -193,14 +202,14 @@ public class RouteFetcher {
     private void addWaypointNames(RouteProgress progress, NavigationRoute.Builder builder) {
         String[] remainingWaypointNames = routeUtils.calculateRemainingWaypointNames(progress);
         if (remainingWaypointNames != null) {
-            builder.addWaypointNames(remainingWaypointNames);
+//            builder.addWaypointNames(remainingWaypointNames);
         }
     }
 
     private void addApproaches(RouteProgress progress, NavigationRoute.Builder builder) {
         String[] remainingApproaches = calculateRemainingApproaches(progress);
         if (remainingApproaches != null) {
-            builder.addApproaches(remainingApproaches);
+//            builder.addApproaches(remainingApproaches);
         }
     }
 

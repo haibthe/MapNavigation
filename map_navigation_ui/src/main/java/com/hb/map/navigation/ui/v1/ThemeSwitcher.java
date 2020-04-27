@@ -15,7 +15,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.hb.map.navigation.v1.navigation.NavigationConstants;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
+
+import java.util.Calendar;
 
 /**
  * This class is used to switch theme colors in {@link NavigationView}.
@@ -106,17 +109,26 @@ public class ThemeSwitcher {
         context.setTheme(nightModeEnabled ? darkTheme : lightTheme);
     }
 
-    static String retrieveMapStyle(Context context) {
+    static Object retrieveMapStyle(Context context) {
         TypedValue mapStyleAttr = resolveAttributeFromId(context, R.attr.navigationViewMapStyle);
-        return mapStyleAttr.string.toString();
+        String temp = mapStyleAttr.string.toString();
+        if (temp.contains("mapbox://")) {
+            return temp;
+        } else {
+            Style.Builder builder = new Style.Builder();
+            builder.fromUri(temp);
+            return builder;
+        }
     }
 
     /**
      * Returns true if the current UI_MODE_NIGHT is enabled, false otherwise.
      */
     private static boolean isNightModeEnabled(Context context) {
-        int currentNightMode = retrieveCurrentUiMode(context);
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return 7 >= hour || hour >= 18;
+//        int currentNightMode = retrieveCurrentUiMode(context);
+//        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private static int retrieveCurrentUiMode(Context context) {
