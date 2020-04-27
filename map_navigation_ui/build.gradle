@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply from: '../config-android.gradle'
 
+android {
+    defaultConfig {
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+}
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')

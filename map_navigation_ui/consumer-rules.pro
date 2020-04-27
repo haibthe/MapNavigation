@@ -14,4 +14,4 @@
 
 # Temporarily adding this explicitly here as we were seeing Maps events being obfuscated
 # --- Maps SDK Telemetry ---
--keep class com.mapbox.mapboxsdk.module.telemetry.**
+#-keep class com.mapbox.mapboxsdk.module.telemetry.**
