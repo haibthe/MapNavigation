@@ -49,15 +49,17 @@ public final class NavigationRoute {
             public void onResponse(Call<VbdRouteResponse> call, Response<VbdRouteResponse> response) {
                 if (callback != null) {
                     DirectionsRoute route = converter.convert(response.body());
-                    ArrayList<DirectionsRoute> routes = new ArrayList();
-                    routes.add(route);
-                    DirectionsResponse newResponse = DirectionsResponse.builder()
-                            .code("200")
-                            .uuid(UUID.randomUUID().toString())
-                            .routes(routes)
-                            .build();
+                    if (route != null) {
+                        ArrayList<DirectionsRoute> routes = new ArrayList<>();
+                        routes.add(route);
+                        DirectionsResponse newResponse = DirectionsResponse.builder()
+                                .code("200")
+                                .uuid(UUID.randomUUID().toString())
+                                .routes(routes)
+                                .build();
 
-                    callback.onResponse(newResponse);
+                        callback.onResponse(newResponse);
+                    }
                 }
             }
 
