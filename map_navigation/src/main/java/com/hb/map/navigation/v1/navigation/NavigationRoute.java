@@ -85,10 +85,7 @@ public final class NavigationRoute {
 
     public static final class Builder {
 
-        private static final String SEMICOLON = ";";
-        private static final String COMMA = ",";
         private final VbdDirections.Builder directionsBuilder;
-        //        private final NavigationRouteEventListener eventListener;
         private NavigationRouteWaypoint origin;
         private NavigationRouteWaypoint destination;
         private List<NavigationRouteWaypoint> waypoints = new ArrayList<>();
@@ -154,6 +151,11 @@ public final class NavigationRoute {
         public Builder eventListener(EventListener eventListener) {
             directionsBuilder.eventListener(eventListener);
             return this;
+        }
+
+        public Builder setInterceptor(Interceptor interceptor) {
+            directionsBuilder.interceptor(interceptor);
+            return  this;
         }
 
         public NavigationRoute build() {
