@@ -1,10 +1,11 @@
-package com.hb.map.navigation.vbd.t4ch.services
+package com.hb.map.navigation.vbd.service
 
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import com.google.auto.value.AutoValue
-import com.hb.map.navigation.vbd.service.VbdService
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.features.t4ch.services.AutoValue_VbdDirections
+import com.hb.map.navigation.vbd.features.ffms.services.DirectionsService
 import com.mapbox.core.constants.Constants.PRECISION_6
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.utils.PolylineUtils

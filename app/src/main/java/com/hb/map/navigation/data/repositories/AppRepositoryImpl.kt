@@ -2,8 +2,8 @@ package com.hb.map.navigation.data.repositories
 
 import com.hb.map.navigation.data.store.AppDataSource
 import com.hb.map.navigation.domain.repositories.AppRepository
-import com.hb.map.navigation.vbd.t4ch.T4CHConverter
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.features.t4ch.T4CHConverter
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng

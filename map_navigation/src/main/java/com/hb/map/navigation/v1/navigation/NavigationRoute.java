@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hb.map.navigation.converter.IConverter;
-import com.hb.map.navigation.vbd.t4ch.T4CHConverter;
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse;
-import com.hb.map.navigation.vbd.t4ch.services.VbdDirections;
+import com.hb.map.navigation.vbd.features.t4ch.T4CHConverter;
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse;
+import com.hb.map.navigation.vbd.service.VbdDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;

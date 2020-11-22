@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.hb.map.navigation.app.R
 import com.hb.map.navigation.utils.AppUtils
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse
 import io.reactivex.Observable
 
 interface AppDataSource {

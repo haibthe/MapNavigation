@@ -1,6 +1,6 @@
-package com.hb.map.navigation.vbd.t4ch.services
+package com.hb.map.navigation.vbd.features.ffms.services
 
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
