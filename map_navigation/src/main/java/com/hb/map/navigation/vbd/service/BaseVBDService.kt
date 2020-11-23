@@ -9,7 +9,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-abstract class VbdService<T, S>(serviceType: Class<S>) {
+abstract class BaseVBDService<T, S>(serviceType: Class<S>) {
 
     private val serviceType: Class<S> = serviceType
     private var enableDebug: Boolean = false

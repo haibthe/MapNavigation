@@ -1,4 +1,4 @@
-package com.hb.map.navigation.vbd.features.ffms
+package com.hb.map.navigation.vbd.service
 
 import com.google.gson.Gson
 import com.hb.map.navigation.converter.BaseConverter
@@ -15,7 +15,7 @@ import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FFMSConverter
+class VBDConverter
 @JvmOverloads
 constructor(
     baseUrl: String,

@@ -4,8 +4,6 @@ import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import com.google.auto.value.AutoValue
 import com.hb.map.navigation.vbd.entities.VbdRouteResponse
-import com.hb.map.navigation.vbd.features.t4ch.services.AutoValue_VbdDirections
-import com.hb.map.navigation.vbd.features.ffms.services.DirectionsService
 import com.mapbox.core.constants.Constants.PRECISION_6
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.utils.PolylineUtils
@@ -19,7 +17,9 @@ import retrofit2.Response
 import java.util.*
 
 @AutoValue
-abstract class VbdDirections : VbdService<VbdRouteResponse, DirectionsService>(DirectionsService::class.java) {
+abstract class VBDDirections : BaseVBDService<VbdRouteResponse, DirectionsService>(
+    DirectionsService::class.java
+) {
 
     companion object {
         @JvmStatic
@@ -29,8 +29,8 @@ abstract class VbdDirections : VbdService<VbdRouteResponse, DirectionsService>(D
 
         @JvmStatic
         fun builder(): Builder {
-            return AutoValue_VbdDirections.Builder()
-
+            return AutoValue_VBDDirections.Builder()
+//            return AutoValue_T4CHDirections.Builder()
         }
     }
 
@@ -126,9 +126,9 @@ abstract class VbdDirections : VbdService<VbdRouteResponse, DirectionsService>(D
 
         abstract fun coordinates(@NonNull coordinates: List<Point?>?): Builder?
 
-        abstract fun autoBuild(): VbdDirections
+        abstract fun autoBuild(): VBDDirections
 
-        fun build(): VbdDirections {
+        fun build(): VBDDirections {
             if (origin != null) {
                 coordinates.add(0, origin!!)
             }
@@ -137,9 +137,9 @@ abstract class VbdDirections : VbdService<VbdRouteResponse, DirectionsService>(D
             }
 
             coordinates(coordinates)
-            steps(1)
-            vehicle(3)
-            baseUrl("http://web.c4i2.net")
+//            steps(1)
+//            vehicle(3)
+//            baseUrl("http://web.c4i2.net/")
 
             return autoBuild()
         }

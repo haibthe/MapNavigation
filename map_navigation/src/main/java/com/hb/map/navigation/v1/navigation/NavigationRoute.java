@@ -4,9 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hb.map.navigation.converter.IConverter;
-import com.hb.map.navigation.vbd.features.t4ch.T4CHConverter;
 import com.hb.map.navigation.vbd.entities.VbdRouteResponse;
-import com.hb.map.navigation.vbd.service.VbdDirections;
+import com.hb.map.navigation.vbd.service.VBDConverter;
+import com.hb.map.navigation.vbd.service.VBDDirections;
+import com.hb.map.navigation.vbd.service.BaseVBDService;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
@@ -30,25 +31,21 @@ public final class NavigationRoute {
         void onFailure(Throwable t);
     }
 
-    private final VbdDirections vbdDirections;
+    private final VBDDirections vbdDirections;
 
-    NavigationRoute(VbdDirections vbdDirections) {
+    private IConverter<VbdRouteResponse> mConverter;
+
+    NavigationRoute(VBDDirections vbdDirections) {
         this.vbdDirections = vbdDirections;
+        mConverter = new VBDConverter(vbdDirections.baseUrl(), "");
     }
-
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    private IConverter<VbdRouteResponse> converter = new T4CHConverter("", "");
 
     public void getRoute(final NavigationRoute.ICallback callback) {
         Callback<VbdRouteResponse> vbdCallBack = new Callback<VbdRouteResponse>() {
             @Override
             public void onResponse(Call<VbdRouteResponse> call, Response<VbdRouteResponse> response) {
                 if (callback != null) {
-                    DirectionsRoute route = converter.convert(response.body());
+                    DirectionsRoute route = mConverter.convert(response.body());
                     if (route != null) {
                         ArrayList<DirectionsRoute> routes = new ArrayList<>();
                         routes.add(route);
@@ -83,19 +80,23 @@ public final class NavigationRoute {
         }
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static final class Builder {
 
-        private final VbdDirections.Builder directionsBuilder;
+        private final VBDDirections.Builder directionsBuilder;
         private NavigationRouteWaypoint origin;
         private NavigationRouteWaypoint destination;
         private List<NavigationRouteWaypoint> waypoints = new ArrayList<>();
 
 
         private Builder() {
-            this(VbdDirections.builder());
+            this(VBDDirections.builder());
         }
 
-        Builder(VbdDirections.Builder directionsBuilder) {
+        Builder(VBDDirections.Builder directionsBuilder) {
             this.directionsBuilder = directionsBuilder;
         }
 
@@ -160,8 +161,7 @@ public final class NavigationRoute {
 
         public NavigationRoute build() {
             assembleWaypoints();
-            directionsBuilder
-                    .steps(1);
+            directionsBuilder.steps(1);
             return new NavigationRoute(directionsBuilder.build());
         }
 
