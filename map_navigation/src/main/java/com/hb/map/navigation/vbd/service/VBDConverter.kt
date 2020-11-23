@@ -1,9 +1,9 @@
-package com.hb.map.navigation.vbd.t4ch
+package com.hb.map.navigation.vbd.service
 
 import com.google.gson.Gson
 import com.hb.map.navigation.converter.BaseConverter
 import com.hb.map.navigation.v1.navigation.NavigationConstants
-import com.hb.map.navigation.vbd.t4ch.entities.VbdRouteResponse
+import com.hb.map.navigation.vbd.entities.VbdRouteResponse
 import com.mapbox.api.directions.v5.models.*
 import com.mapbox.core.constants.Constants
 import com.mapbox.geojson.LineString
@@ -15,7 +15,7 @@ import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
-class T4CHConverter
+class VBDConverter
 @JvmOverloads
 constructor(
     baseUrl: String,
