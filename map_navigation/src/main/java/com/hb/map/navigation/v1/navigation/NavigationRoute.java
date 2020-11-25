@@ -143,6 +143,11 @@ public final class NavigationRoute {
             return this;
         }
 
+        public Builder vehicle(int veh) {
+            directionsBuilder.vehicle(veh);
+            return this;
+        }
+
 
         public Builder interceptor(Interceptor interceptor) {
             directionsBuilder.interceptor(interceptor);
