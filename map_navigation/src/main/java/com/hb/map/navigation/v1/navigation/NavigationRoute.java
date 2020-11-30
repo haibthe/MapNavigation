@@ -56,6 +56,8 @@ public final class NavigationRoute {
                                 .build();
 
                         callback.onResponse(newResponse);
+                    } else {
+                        callback.onFailure(new Throwable("Not found"));
                     }
                 }
             }
