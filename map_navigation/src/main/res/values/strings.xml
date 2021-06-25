@@ -11,7 +11,7 @@
 
     <!-- Time formatting -->
     <plurals name="numberOfDays">
-        <item quantity="other">day</item>
+        <item quantity="other">days</item>
     </plurals>
     <!-- Hour -->
     <string name="hr">hour</string>
