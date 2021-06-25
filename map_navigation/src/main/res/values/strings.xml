@@ -1,20 +1,20 @@
 <resources>
     <!-- Notification Strings -->
-    <string name="end_navigation">Kết thúc Điều hướng</string>
-    <string name="channel_name">Thông báo Điều hướng</string>
-    <string name="notification_arrival_time_format">Đến nơi %s</string>
+    <string name="end_navigation">End navigation</string>
+    <string name="channel_name">Navigation</string>
+    <string name="notification_arrival_time_format">Arrive %s</string>
     <string name="kilometers">km</string>
     <string name="meters">m</string>
-    <string name="miles">dặm</string>
+    <string name="miles">miles</string>
     <string name="feet">foot</string>
-    <string name="eta_format">Đến %s</string>
+    <string name="eta_format">Reach %s</string>
 
     <!-- Time formatting -->
     <plurals name="numberOfDays">
-        <item quantity="other">ngày</item>
+        <item quantity="other">day</item>
     </plurals>
     <!-- Hour -->
-    <string name="hr">giờ</string>
+    <string name="hr">hour</string>
     <!-- Minute -->
-    <string name="min">phút</string>
+    <string name="min">minutes</string>
 </resources>
